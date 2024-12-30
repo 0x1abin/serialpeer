@@ -111,6 +111,16 @@ onMounted(() => {
     }
   })
 
+  // 添加粘贴事件监听
+  terminal.value.onData((data) => {
+    if (!store.isConnected) return
+    
+    // 检查是否是粘贴的数据（通常包含多个字符）
+    if (data.length > 1) {
+      store.sendData(data, 'ASCII')
+    }
+  })
+
   // 监听窗口大小变化
   window.addEventListener('resize', handleResize)
 })
