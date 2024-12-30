@@ -6,13 +6,13 @@
         <ColorModeButton />
       </header>
 
-      <div class="grid grid-cols-1 lg:grid-cols-[384px_1fr] gap-2">
-        <div class="space-y-2">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="space-y-3">
           <SerialConnect />
           <QuickCommands />
         </div>
         
-        <div class="space-y-2">
+        <div class="md:col-span-2 space-y-3">
           <SerialMonitor />
           <SerialSender />
         </div>
