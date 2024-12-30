@@ -1,7 +1,7 @@
 <template>
   <div class="card bg-base-200" :class="{ 'fixed inset-0 z-50': isMaximized }">
-    <div class="card-body">
-      <div class="flex justify-between items-center mb-4">
+    <div class="card-body p-4">
+      <div class="flex justify-between items-center mb-2">
         <h2 class="card-title">Serial Monitor</h2>
         <div class="space-x-2 flex items-center">
           <div class="form-control">
@@ -34,8 +34,8 @@
 
       <div 
         ref="terminalContainer"
-        class="relative"
-        :class="isMaximized ? 'h-[calc(100vh-120px)]' : 'h-[400px]'"
+        class="relative rounded-lg overflow-hidden"
+        :class="isMaximized ? 'h-[calc(100vh-90px)]' : 'h-[500px]'"
       />
     </div>
   </div>
@@ -278,15 +278,21 @@ onMounted(() => {
 .xterm {
   height: 100%;
   padding: 8px;
+  border-radius: 0.5rem;
 }
 
 .xterm-viewport {
-  overflow-y: auto;
+  overflow-y: auto !important;
+  border-radius: 0.5rem;
 }
 
-/* 主题切换过渡 */
+/* 修改主题切换过渡 */
 .card {
   transition: all 0.3s ease;
+}
+
+.card-body {
+  padding: 1rem;
 }
 
 /* 添加开关样式 */
@@ -300,9 +306,16 @@ onMounted(() => {
   min-height: auto;
 }
 
-/* 添加聚焦样式 */
+/* 修改聚焦样式 */
 .xterm:focus {
   outline: 2px solid var(--p);
-  outline-offset: 2px;
+  outline-offset: -2px;
+  border-radius: 0.5rem;
+}
+
+/* 添加终端容器样式 */
+.terminal-container {
+  background-color: var(--b3);
+  border-radius: 0.5rem;
 }
 </style>

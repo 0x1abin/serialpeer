@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-base-200">
+  <div class="card bg-base-200 lg:max-w-sm">
     <div class="card-body">
       <div class="flex flex-col gap-2 mb-4">
         <h2 class="card-title">Quick Commands</h2>

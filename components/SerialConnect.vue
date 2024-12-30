@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-base-200">
+  <div class="card bg-base-200 lg:max-w-sm">
     <div class="card-body">
       <h2 class="card-title mb-4">Connection Settings</h2>
       
