@@ -14,7 +14,7 @@
               />
             </label>
           </div>
-          <button class="btn btn-sm" @click="store.clearMessages">
+          <button class="btn btn-sm" @click="clearTerminal">
             Clear
           </button>
           <button class="btn btn-sm" @click="exportLogs">
@@ -33,16 +33,10 @@
       </div>
 
       <div 
-        ref="monitorRef"
-        class="relative font-mono text-sm"
+        ref="terminalContainer"
+        class="relative"
         :class="isMaximized ? 'h-[calc(100vh-120px)]' : 'h-[400px]'"
-      >
-        <pre
-          ref="outputRef"
-          class="w-full h-full p-4 bg-base-300 rounded-lg overflow-auto whitespace-pre"
-          v-html="formattedMessages"
-        ></pre>
-      </div>
+      />
     </div>
   </div>
 
@@ -54,86 +48,88 @@
 </template>
 
 <script setup lang="ts">
+import { Terminal } from 'xterm'
+import { FitAddon } from 'xterm-addon-fit'
+import { WebLinksAddon } from 'xterm-addon-web-links'
 import { saveAs } from 'file-saver'
+import 'xterm/css/xterm.css'
+
 const store = useSerialStore()
-const monitorRef = ref<HTMLElement | null>(null)
-const outputRef = ref<HTMLElement | null>(null)
+const terminalContainer = ref<HTMLElement | null>(null)
+const terminal = ref<Terminal | null>(null)
+const fitAddon = ref<FitAddon | null>(null)
 const isMaximized = ref(false)
 
-// ANSI 转义序列处理
-function processAnsiEscapes(text: string): string {
-  const ansiColorMap: Record<string, string> = {
-    '30': 'color: #000000', // 黑
-    '31': 'color: #ff0000', // 红
-    '32': 'color: #00ff00', // 绿
-    '33': 'color: #ffff00', // 黄
-    '34': 'color: #0000ff', // 蓝
-    '35': 'color: #ff00ff', // 紫
-    '36': 'color: #00ffff', // 青
-    '37': 'color: #ffffff', // 白
-    '90': 'color: #808080', // 亮黑
-    '91': 'color: #ff8080', // 亮红
-    '92': 'color: #80ff80', // 亮绿
-    '93': 'color: #ffff80', // 亮黄
-    '94': 'color: #8080ff', // 亮蓝
-    '95': 'color: #ff80ff', // 亮紫
-    '96': 'color: #80ffff', // 亮青
-    '97': 'color: #ffffff'  // 亮白
-  }
+// 初始化终端
+onMounted(() => {
+  if (!terminalContainer.value) return
 
-  let result = ''
-  let currentSpan = ''
-  let inEscape = false
-  let escapeSequence = ''
+  terminal.value = new Terminal({
+    fontSize: 14,
+    fontFamily: 'Consolas, Monaco, monospace',
+    theme: {
+      background: 'var(--b3)',
+      foreground: 'var(--bc)',
+      cursor: 'var(--bc)',
+      black: '#000000',
+      red: '#FF0000',
+      green: '#00FF00',
+      yellow: '#FFFF00',
+      blue: '#0000FF',
+      magenta: '#FF00FF',
+      cyan: '#00FFFF',
+      white: '#FFFFFF',
+    },
+    cursorBlink: true,
+    scrollback: 5000,
+    convertEol: true
+  })
 
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i]
+  fitAddon.value = new FitAddon()
+  terminal.value.loadAddon(fitAddon.value)
+  terminal.value.loadAddon(new WebLinksAddon())
 
-    if (char === '\x1b') {
-      inEscape = true
-      escapeSequence = ''
-      continue
-    }
+  terminal.value.open(terminalContainer.value)
+  fitAddon.value.fit()
 
-    if (inEscape) {
-      escapeSequence += char
-      if (char === 'm') {
-        inEscape = false
-        const code = escapeSequence.slice(1, -1) // 移除 [ 和 m
-        
-        if (code === '0') {
-          if (currentSpan) {
-            result += '</span>'
-            currentSpan = ''
-          }
-        } else if (ansiColorMap[code]) {
-          if (currentSpan) result += '</span>'
-          currentSpan = `<span style="${ansiColorMap[code]}">`
-          result += currentSpan
-        }
-      }
-      continue
-    }
+  // 监听窗口大小变化
+  window.addEventListener('resize', handleResize)
+})
 
-    if (char === '<') {
-      result += '&lt;'
-    } else if (char === '>') {
-      result += '&gt;'
-    } else {
-      result += char
-    }
-  }
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+  terminal.value?.dispose()
+})
 
-  if (currentSpan) {
-    result += '</span>'
-  }
+// 监听消息变化
+watch(() => store.messages, (messages) => {
+  const lastMessage = messages[messages.length - 1]
+  if (!lastMessage || !terminal.value) return
 
-  return result
+  const timestamp = store.logConfig.showTimestamp
+    ? `[${new Date(lastMessage.timestamp).toLocaleTimeString('en-US', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        fractionalSecondDigits: 3
+      })}] `
+    : ''
+
+  terminal.value.write(timestamp + lastMessage.data)
+}, { deep: true })
+
+function handleResize() {
+  fitAddon.value?.fit()
 }
 
-// 格式化消息
-const formattedMessages = computed(() => {
-  return store.messages.map(msg => {
+function clearTerminal() {
+  terminal.value?.clear()
+  store.clearMessages()
+}
+
+function exportLogs() {
+  const content = store.messages.map(msg => {
     const timestamp = store.logConfig.showTimestamp
       ? `[${new Date(msg.timestamp).toLocaleTimeString('en-US', {
           hour12: false,
@@ -143,38 +139,17 @@ const formattedMessages = computed(() => {
           fractionalSecondDigits: 3
         })}] `
       : ''
-    return processAnsiEscapes(timestamp + msg.data)
+    return timestamp + msg.data
   }).join('')
-})
 
-// 自动滚动
-watch(() => store.messages.length, () => {
-  if (!outputRef.value || !store.logConfig.autoScroll) return
-
-  requestAnimationFrame(() => {
-    try {
-      outputRef.value.scrollTop = outputRef.value.scrollHeight
-    } catch (e) {
-      console.error('Scroll failed:', e)
-    }
-  })
-}, { flush: 'post' })
-
-function exportLogs() {
-  const blob = new Blob([formattedMessages.value], { type: 'text/plain;charset=utf-8' })
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
   saveAs(blob, `serial-logs-${new Date().toISOString()}.txt`)
 }
 
 function toggleMaximize() {
   isMaximized.value = !isMaximized.value
-  // 切换后需要重新滚动到底部
   nextTick(() => {
-    if (monitorRef.value && store.logConfig.autoScroll) {
-      const textarea = monitorRef.value.querySelector('textarea')
-      if (textarea) {
-        textarea.scrollTop = textarea.scrollHeight
-      }
-    }
+    fitAddon.value?.fit()
   })
 }
 
@@ -192,33 +167,17 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-pre {
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-  margin: 0;
-  tab-size: 4;
+<style>
+.xterm {
+  height: 100%;
+  padding: 8px;
 }
 
-/* 自定义滚动条样式 */
-pre::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+.xterm-viewport {
+  overflow-y: auto;
 }
 
-pre::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-pre::-webkit-scrollbar-thumb {
-  background-color: rgba(155, 155, 155, 0.5);
-  border-radius: 4px;
-}
-
-pre::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(155, 155, 155, 0.7);
-}
-
-/* 最大化时的过渡动画 */
+/* 主题切换过渡 */
 .card {
   transition: all 0.3s ease;
 }
