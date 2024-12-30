@@ -8,6 +8,16 @@ export function useSerialData() {
 
   async function startReading(port: SerialPort) {
     try {
+      // 初始化 writer
+      if (writer.value) {
+        await writer.value.close()
+        await writer.value.releaseLock()
+      }
+      writer.value = port.writable?.getWriter()
+      if (!writer.value) {
+        throw new Error('Failed to get serial writer')
+      }
+
       // Release existing reader if any
       if (reader.value) {
         await reader.value.cancel()
@@ -30,7 +40,7 @@ export function useSerialData() {
           }
 
           if (value) {
-            console.log('Received data:', value)
+            // console.log('Received data:', value)
             const message: SerialMessage = {
               id: crypto.randomUUID(),
               timestamp: Date.now(),
@@ -47,6 +57,7 @@ export function useSerialData() {
       }
     } catch (error) {
       console.error('Failed to start reading:', error)
+      throw error
     }
   }
 
@@ -58,6 +69,16 @@ export function useSerialData() {
         reader.value = null
       } catch (e) {
         console.error('Failed to stop reading:', e)
+      }
+    }
+
+    if (writer.value) {
+      try {
+        await writer.value.close()
+        await writer.value.releaseLock()
+        writer.value = null
+      } catch (e) {
+        console.error('Failed to release writer:', e)
       }
     }
   }

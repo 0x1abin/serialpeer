@@ -26,3 +26,7 @@ export interface LogConfig {
   autoScroll: boolean;
   showTimestamp: boolean;
 }
+
+export interface SendConfig {
+  autoNewline: boolean;
+}

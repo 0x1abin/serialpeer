@@ -11,11 +11,22 @@
         :disabled="!store.isConnected"
       ></textarea>
 
-      <div class="flex justify-between items-center mt-4">
-        <select v-model="format" class="select select-bordered">
-          <option value="ASCII">ASCII</option>
-          <option value="HEX">HEX</option>
-        </select>
+      <div class="flex flex-wrap gap-4 justify-between items-center mt-4">
+        <div class="flex items-center gap-4">
+          <select v-model="format" class="select select-bordered">
+            <option value="ASCII">ASCII</option>
+            <option value="HEX">HEX</option>
+          </select>
+
+          <label class="label cursor-pointer space-x-2">
+            <span class="label-text">Auto Newline</span>
+            <input 
+              type="checkbox" 
+              class="toggle toggle-sm"
+              v-model="autoNewline"
+            />
+          </label>
+        </div>
 
         <button 
           class="btn btn-primary"
@@ -33,12 +44,17 @@
 const store = useSerialStore()
 const message = ref('')
 const format = ref<'ASCII' | 'HEX'>('ASCII')
+const autoNewline = ref(false)
 
 async function sendMessage() {
   if (!message.value) return
   
   try {
-    await store.sendData(message.value, format.value)
+    let dataToSend = message.value
+    if (autoNewline.value && format.value === 'ASCII') {
+      dataToSend += '\n'
+    }
+    await store.sendData(dataToSend, format.value)
     message.value = ''
   } catch (error) {
     console.error('Failed to send message:', error)
