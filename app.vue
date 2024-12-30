@@ -1,9 +1,9 @@
 `<template>
-  <div class="min-h-screen bg-base-100" data-theme="light">
+  <div class="min-h-screen bg-base-100" :data-theme="colorMode.value">
     <div class="container mx-auto p-4">
       <header class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-bold">Web Serial Debug</h1>
-        <ThemeToggle />
+        <ColorModeButton />
       </header>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -19,4 +19,8 @@
       </div>
     </div>
   </div>
-</template>`
+</template>
+
+<script setup>
+const colorMode = useColorMode()
+</script>`

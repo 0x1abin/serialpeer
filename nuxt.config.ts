@@ -8,8 +8,10 @@ export default defineNuxtConfig({
 
   colorMode: {
     classSuffix: '',
+    fallback: 'light',
     preference: 'system',
-    fallback: 'light'
+    dataValue: 'theme',
+    storageKey: 'nuxt-color-mode'
   },
 
   app: {
