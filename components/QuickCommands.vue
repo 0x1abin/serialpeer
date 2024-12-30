@@ -1,4 +1,4 @@
-`<template>
+<template>
   <div class="card bg-base-200">
     <div class="card-body">
       <div class="flex justify-between items-center mb-4">
@@ -81,4 +81,4 @@ function addCommand() {
     format: 'ASCII'
   }
 }
-</script>`
+</script>

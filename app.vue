@@ -1,4 +1,4 @@
-`<template>
+<template>
   <div class="min-h-screen bg-base-100" :data-theme="colorMode.value">
     <div class="container mx-auto p-4">
       <header class="flex justify-between items-center mb-4">
@@ -21,6 +21,6 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const colorMode = useColorMode()
-</script>`
+</script>

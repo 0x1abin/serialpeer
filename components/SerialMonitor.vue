@@ -1,4 +1,4 @@
-`<template>
+<template>
   <div class="card bg-base-200">
     <div class="card-body">
       <div class="flex justify-between items-center mb-4">
@@ -50,16 +50,18 @@ function exportLogs() {
   saveAs(blob, `serial-logs-${new Date().toISOString()}.txt`)
 }
 
-// 监听消息变化，自动滚动到底部
+// Watch messages and auto-scroll to bottom
 watch(() => store.messages.length, () => {
   if (monitorRef.value && store.logConfig.autoScroll) {
-    nextTick(() => {
+    requestAnimationFrame(() => {
       try {
-        monitorRef.value.scrollTop = monitorRef.value.scrollHeight
+        if (monitorRef.value) {
+          monitorRef.value.scrollTop = monitorRef.value.scrollHeight
+        }
       } catch (e) {
-        console.error('滚动失败:', e)
+        console.error('Scroll failed:', e)
       }
     })
   }
 }, { flush: 'post' })
-</script>`
+</script>
