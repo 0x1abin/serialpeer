@@ -92,6 +92,25 @@ onMounted(() => {
   terminal.value.open(terminalContainer.value)
   fitAddon.value.fit()
 
+  // 修改按键监听逻辑
+  terminal.value.onKey(async (e) => {
+    if (!store.isConnected) return
+    
+    e.domEvent.preventDefault() // 阻止默认的按键输入行为
+
+    const char = e.key
+    // 处理特殊按键
+    if (e.domEvent.keyCode === 13) { // Enter key
+      await store.sendData('\n', 'ASCII')
+    } else if (e.domEvent.keyCode === 8) { // Backspace key
+      // 可以选择是否发送退格键
+      // await store.sendData('\b', 'ASCII')
+    } else {
+      // 只发送普通字符，不显示本地回显
+      await store.sendData(char, 'ASCII')
+    }
+  })
+
   // 监听窗口大小变化
   window.addEventListener('resize', handleResize)
 })
@@ -101,22 +120,25 @@ onUnmounted(() => {
   terminal.value?.dispose()
 })
 
-// 监听消息变化
+// 修改消息监听，只显示接收到的消息
 watch(() => store.messages, (messages) => {
   const lastMessage = messages[messages.length - 1]
   if (!lastMessage || !terminal.value) return
 
-  const timestamp = store.logConfig.showTimestamp
-    ? `[${new Date(lastMessage.timestamp).toLocaleTimeString('en-US', {
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        fractionalSecondDigits: 3
-      })}] `
-    : ''
+  // 只显示接收到的消息
+  if (lastMessage.direction === 'received') {
+    const timestamp = store.logConfig.showTimestamp
+      ? `[${new Date(lastMessage.timestamp).toLocaleTimeString('en-US', {
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          fractionalSecondDigits: 3
+        })}] `
+      : ''
 
-  terminal.value.write(timestamp + lastMessage.data)
+    terminal.value.write(timestamp + lastMessage.data)
+  }
 }, { deep: true })
 
 function handleResize() {
@@ -191,5 +213,11 @@ onMounted(() => {
 .label {
   padding: 0;
   min-height: auto;
+}
+
+/* 添加聚焦样式 */
+.xterm:focus {
+  outline: 2px solid var(--p);
+  outline-offset: 2px;
 }
 </style>
