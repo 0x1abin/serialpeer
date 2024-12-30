@@ -23,7 +23,7 @@
           </div>
           <button 
             class="btn btn-sm w-full sm:w-auto"
-            @click="() => store.sendData(cmd.command, cmd.format)"
+            @click="() => sendCommand(cmd)"
             :disabled="!store.isConnected"
           >
             Send
@@ -50,6 +50,16 @@
                 <option value="HEX">HEX</option>
               </select>
             </div>
+            <div class="form-control">
+              <label class="label cursor-pointer">
+                <span class="label-text">Add Newline</span>
+                <input 
+                  type="checkbox" 
+                  class="toggle toggle-sm"
+                  v-model="newCommand.addNewline" 
+                />
+              </label>
+            </div>
           </div>
           <div class="modal-action">
             <button class="btn" @click="showAddDialog = false">Cancel</button>
@@ -69,7 +79,8 @@ const showAddDialog = ref(false)
 const newCommand = ref<Omit<QuickCommand, 'id'>>({
   name: '',
   command: '',
-  format: 'ASCII'
+  format: 'ASCII',
+  addNewline: false
 })
 
 function addCommand() {
@@ -81,7 +92,16 @@ function addCommand() {
   newCommand.value = {
     name: '',
     command: '',
-    format: 'ASCII'
+    format: 'ASCII',
+    addNewline: false
   }
+}
+
+function sendCommand(cmd: QuickCommand) {
+  let dataToSend = cmd.command
+  if (cmd.addNewline && cmd.format === 'ASCII') {
+    dataToSend += '\n'
+  }
+  store.sendData(dataToSend, cmd.format)
 }
 </script>

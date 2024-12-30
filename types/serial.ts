@@ -18,7 +18,8 @@ export interface QuickCommand {
   id: string;
   name: string;
   command: string;
-  format: 'HEX' | 'ASCII';
+  format: 'ASCII' | 'HEX';
+  addNewline: boolean;
 }
 
 export interface LogConfig {
