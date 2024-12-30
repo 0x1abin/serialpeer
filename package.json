@@ -1,0 +1,26 @@
+{
+  "name": "web-serial-debug",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxtjs/color-mode": "^3.3.2",
+    "@nuxtjs/tailwindcss": "^6.11.4",
+    "daisyui": "^4.7.2",
+    "file-saver": "^2.0.5",
+    "nuxt": "^3.10.3",
+    "pinia": "^2.1.7",
+    "@pinia/nuxt": "^0.5.1",
+    "nuxt-icon": "^0.6.9"
+  },
+  "devDependencies": {
+    "@types/file-saver": "^2.0.7",
+    "typescript": "^5.4.2"
+  }
+}
