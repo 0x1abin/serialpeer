@@ -103,8 +103,7 @@ onMounted(() => {
     if (e.domEvent.keyCode === 13) { // Enter key
       await store.sendData('\n', 'ASCII')
     } else if (e.domEvent.keyCode === 8) { // Backspace key
-      // 可以选择是否发送退格键
-      // await store.sendData('\b', 'ASCII')
+      await store.sendData('\b', 'ASCII') // 发送退格键
     } else {
       // 只发送普通字符，不显示本地回显
       await store.sendData(char, 'ASCII')
