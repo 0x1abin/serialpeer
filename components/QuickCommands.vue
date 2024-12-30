@@ -1,9 +1,12 @@
 <template>
   <div class="card bg-base-200">
     <div class="card-body">
-      <div class="flex justify-between items-center mb-4">
+      <div class="flex flex-col gap-2 mb-4">
         <h2 class="card-title">Quick Commands</h2>
-        <button class="btn btn-sm btn-primary" @click="showAddDialog = true">
+        <button 
+          class="btn btn-primary w-full" 
+          @click="showAddDialog = true"
+        >
           Add Command
         </button>
       </div>
@@ -12,14 +15,14 @@
         <div 
           v-for="cmd in store.quickCommands" 
           :key="cmd.id"
-          class="flex justify-between items-center p-2 bg-base-100 rounded-lg"
+          class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-2 bg-base-100 rounded-lg gap-2"
         >
-          <div>
+          <div class="w-full sm:w-auto">
             <div class="font-medium">{{ cmd.name }}</div>
-            <div class="text-sm opacity-70">{{ cmd.command }}</div>
+            <div class="text-sm opacity-70 break-all">{{ cmd.command }}</div>
           </div>
           <button 
-            class="btn btn-sm"
+            class="btn btn-sm w-full sm:w-auto"
             @click="() => store.sendData(cmd.command, cmd.format)"
             :disabled="!store.isConnected"
           >
