@@ -17,17 +17,25 @@
           :key="cmd.id"
           class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-2 bg-base-100 rounded-lg gap-2"
         >
-          <div class="w-full sm:w-auto">
+          <div class="flex-1">
             <div class="font-medium">{{ cmd.name }}</div>
             <div class="text-sm opacity-70 break-all">{{ cmd.command }}</div>
           </div>
-          <button 
-            class="btn btn-sm w-full sm:w-auto"
-            @click="() => sendCommand(cmd)"
-            :disabled="!store.isConnected"
-          >
-            Send
-          </button>
+          <div class="flex gap-2">
+            <button 
+              class="btn btn-sm btn-error btn-square"
+              @click="() => store.removeQuickCommand(cmd.id)"
+            >
+              <Icon name="ph:trash" class="w-4 h-4" />
+            </button>
+            <button 
+              class="btn btn-sm"
+              @click="() => sendCommand(cmd)"
+              :disabled="!store.isConnected"
+            >
+              Send
+            </button>
+          </div>
         </div>
       </div>
 

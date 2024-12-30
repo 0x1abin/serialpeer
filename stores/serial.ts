@@ -25,7 +25,14 @@ export const useSerialStore = defineStore('serial', () => {
     localStorage.setItem('serialLogShowTimestamp', newValue.toString())
   })
 
-  const quickCommands = ref<QuickCommand[]>([])
+  const quickCommands = ref<QuickCommand[]>(
+    JSON.parse(localStorage.getItem('serialQuickCommands') || '[]')
+  )
+
+  // 监听 quickCommands 变化并保存到 localStorage
+  watch(() => quickCommands.value, (newCommands) => {
+    localStorage.setItem('serialQuickCommands', JSON.stringify(newCommands))
+  }, { deep: true })
 
   const error = ref<string | null>(null)
 
