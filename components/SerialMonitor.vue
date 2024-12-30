@@ -15,21 +15,13 @@
 
       <div 
         ref="monitorRef"
-        class="h-[400px] overflow-y-auto space-y-2 font-mono bg-base-100 p-4 rounded-lg"
+        class="relative h-[400px] font-mono text-sm"
       >
-        <template v-for="message in store.messages" :key="message.id">
-          <div :class="[
-            'p-2 rounded text-sm',
-            message.direction === 'received' ? 'bg-base-200' : 'bg-primary/10'
-          ]">
-            <div class="text-xs opacity-70" v-if="store.logConfig.showTimestamp">
-              {{ new Date(message.timestamp).toLocaleString() }}
-            </div>
-            <div class="break-all">
-              {{ message.data }}
-            </div>
-          </div>
-        </template>
+        <textarea
+          readonly
+          class="w-full h-full p-4 bg-base-300 rounded-lg resize-none focus:outline-none"
+          :value="formattedMessages"
+        ></textarea>
       </div>
     </div>
   </div>
@@ -40,13 +32,20 @@ import { saveAs } from 'file-saver'
 const store = useSerialStore()
 const monitorRef = ref<HTMLElement>()
 
-function exportLogs() {
-  const content = store.messages.map(msg => {
-    const timestamp = new Date(msg.timestamp).toLocaleString()
-    return `[${timestamp}] ${msg.direction.toUpperCase()}: ${msg.data}`
+// Format messages as terminal-like output
+const formattedMessages = computed(() => {
+  return store.messages.map(msg => {
+    const timestamp = store.logConfig.showTimestamp
+      ? `[${new Date(msg.timestamp).toLocaleTimeString()}] `
+      : ''
+    const direction = msg.direction === 'received' ? '<<' : '>>'
+    const format = msg.format === 'HEX' ? '[HEX]' : ''
+    return `${timestamp}${direction} ${format}${msg.data}`
   }).join('\n')
-  
-  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
+})
+
+function exportLogs() {
+  const blob = new Blob([formattedMessages.value], { type: 'text/plain;charset=utf-8' })
   saveAs(blob, `serial-logs-${new Date().toISOString()}.txt`)
 }
 
@@ -55,8 +54,9 @@ watch(() => store.messages.length, () => {
   if (monitorRef.value && store.logConfig.autoScroll) {
     requestAnimationFrame(() => {
       try {
-        if (monitorRef.value) {
-          monitorRef.value.scrollTop = monitorRef.value.scrollHeight
+        const textarea = monitorRef.value.querySelector('textarea')
+        if (textarea) {
+          textarea.scrollTop = textarea.scrollHeight
         }
       } catch (e) {
         console.error('Scroll failed:', e)
@@ -65,3 +65,31 @@ watch(() => store.messages.length, () => {
   }
 }, { flush: 'post' })
 </script>
+
+<style scoped>
+textarea {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: scroll;
+}
+
+/* 自定义滚动条样式 */
+textarea::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(155, 155, 155, 0.7);
+}
+</style>
