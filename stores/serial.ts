@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import type { SerialConfig, QuickCommand, LogConfig } from '~/types/serial'
 
 export const useSerialStore = defineStore('serial', () => {
@@ -17,7 +17,12 @@ export const useSerialStore = defineStore('serial', () => {
   const logConfig = ref<LogConfig>({
     maxSize: 1000,
     autoScroll: true,
-    showTimestamp: true
+    showTimestamp: localStorage.getItem('serialLogShowTimestamp') === 'true' ? true : false
+  })
+
+  // 监听 showTimestamp 变化并保存到 localStorage
+  watch(() => logConfig.value.showTimestamp, (newValue) => {
+    localStorage.setItem('serialLogShowTimestamp', newValue.toString())
   })
 
   const quickCommands = ref<QuickCommand[]>([])
