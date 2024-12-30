@@ -24,7 +24,7 @@ A web-based serial port debugging tool built with Nuxt 3, providing a modern int
 ```bash
 # Clone the repository
 git clone https://github.com/0x1abin/uart0.git
-cd web-serial-debug
+cd uart0
 
 # Install dependencies
 npm install
