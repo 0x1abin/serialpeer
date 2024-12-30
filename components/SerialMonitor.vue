@@ -4,6 +4,16 @@
       <div class="flex justify-between items-center mb-4">
         <h2 class="card-title">Data Monitor</h2>
         <div class="space-x-2 flex items-center">
+          <div class="form-control">
+            <label class="label cursor-pointer space-x-2">
+              <span class="label-text">Timestamp</span>
+              <input 
+                type="checkbox" 
+                class="toggle toggle-sm"
+                v-model="store.logConfig.showTimestamp"
+              />
+            </label>
+          </div>
           <button class="btn btn-sm" @click="store.clearMessages">
             Clear
           </button>
@@ -54,7 +64,13 @@ const isMaximized = ref(false)
 const formattedMessages = computed(() => {
   return store.messages.map(msg => {
     const timestamp = store.logConfig.showTimestamp
-      ? `[${new Date(msg.timestamp).toLocaleTimeString()}] `
+      ? `[${new Date(msg.timestamp).toLocaleTimeString('en-US', {
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          fractionalSecondDigits: 3
+        })}] `
       : ''
     const direction = msg.direction === 'received' ? '<<' : '>>'
     const format = msg.format === 'HEX' ? '[HEX]' : ''
@@ -140,5 +156,16 @@ textarea::-webkit-scrollbar-thumb:hover {
 /* 最大化时的过渡动画 */
 .card {
   transition: all 0.3s ease;
+}
+
+/* 添加开关样式 */
+.form-control {
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  padding: 0;
+  min-height: auto;
 }
 </style>
