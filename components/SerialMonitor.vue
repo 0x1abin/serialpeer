@@ -4,16 +4,6 @@
       <div class="flex justify-between items-center mb-2">
         <h2 class="card-title">Serial Monitor</h2>
         <div class="space-x-2 flex items-center">
-          <div class="form-control">
-            <label class="label cursor-pointer space-x-2">
-              <span class="label-text">Timestamp</span>
-              <input 
-                type="checkbox" 
-                class="toggle toggle-sm"
-                v-model="store.logConfig.showTimestamp"
-              />
-            </label>
-          </div>
           <button class="btn btn-sm" @click="clearTerminal">
             Clear
           </button>
@@ -210,19 +200,8 @@ watch(() => store.messages, (messages) => {
   const lastMessage = messages[messages.length - 1]
   if (!lastMessage || !terminal.value) return
 
-  // 只显示接收到的消息
   if (lastMessage.direction === 'received') {
-    const timestamp = store.logConfig.showTimestamp
-      ? `[${new Date(lastMessage.timestamp).toLocaleTimeString('en-US', {
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          fractionalSecondDigits: 3
-        })}] `
-      : ''
-
-    terminal.value.write(timestamp + lastMessage.data)
+    terminal.value.write(lastMessage.data)
   }
 }, { deep: true })
 
@@ -236,19 +215,7 @@ function clearTerminal() {
 }
 
 function exportLogs() {
-  const content = store.messages.map(msg => {
-    const timestamp = store.logConfig.showTimestamp
-      ? `[${new Date(msg.timestamp).toLocaleTimeString('en-US', {
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          fractionalSecondDigits: 3
-        })}] `
-      : ''
-    return timestamp + msg.data
-  }).join('')
-
+  const content = store.messages.map(msg => msg.data).join('')
   const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
   saveAs(blob, `serial-logs-${new Date().toISOString()}.txt`)
 }
@@ -293,17 +260,6 @@ onMounted(() => {
 
 .card-body {
   padding: 1rem;
-}
-
-/* 添加开关样式 */
-.form-control {
-  display: flex;
-  align-items: center;
-}
-
-.label {
-  padding: 0;
-  min-height: auto;
 }
 
 /* 修改聚焦样式 */
