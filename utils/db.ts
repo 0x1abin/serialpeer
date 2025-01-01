@@ -2,7 +2,6 @@ import { openDB, type IDBPDatabase } from 'idb'
 
 interface SerialLogFile {
   id?: number
-  name: string
   content: string[]
   createdAt: number
   updatedAt: number
@@ -19,7 +18,6 @@ class SerialDB {
             keyPath: 'id', 
             autoIncrement: true 
           })
-          store.createIndex('name', 'name')
           store.createIndex('updatedAt', 'updatedAt')
         }
       }

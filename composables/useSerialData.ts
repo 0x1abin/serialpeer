@@ -12,10 +12,7 @@ export function useSerialData() {
   let partialLine = ''
 
   async function initializeNewLog() {
-    const now = new Date()
-    const name = `Serial Log ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`
     currentLogId.value = await serialDB.saveLogFile({
-      name,
       content: [],
       createdAt: Date.now(),
       updatedAt: Date.now()

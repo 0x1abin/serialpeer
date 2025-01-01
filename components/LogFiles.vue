@@ -27,8 +27,9 @@ function formatTimestamp(timestamp: number): string {
   return new Date(timestamp).toLocaleString()
 }
 
-function formatDisplayName(name: string): string {
-  return name.replace(/^Serial Log /, '')
+function formatDisplayName(timestamp: number): string {
+  const date = new Date(timestamp)
+  return date.toLocaleString()
 }
 
 async function downloadLog(file: typeof logFiles.value[0]) {
@@ -72,7 +73,7 @@ defineExpose({
         >
           <div class="flex-1 min-w-0">
             <div class="font-medium whitespace-nowrap overflow-hidden text-ellipsis">
-              {{ formatDisplayName(file.name) }}
+              {{ formatDisplayName(file.createdAt) }}
             </div>
             <div class="text-sm opacity-70 flex gap-2">
               <span>{{ formatFileSize(file.content) }}</span>
