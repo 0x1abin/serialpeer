@@ -1,8 +1,8 @@
-import type { IKeyboardEvent } from 'xterm'
+import type { ITerminalEvent } from 'xterm'
 import type { SerialStore } from '~/stores/serial'
 
 export async function handleKeyboardEvent(
-  e: IKeyboardEvent,
+  e: ITerminalEvent,
   store: SerialStore
 ) {
   if (!store.isConnected) return
