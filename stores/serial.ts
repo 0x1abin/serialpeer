@@ -68,6 +68,13 @@ export const useSerialStore = defineStore('serial', () => {
     quickCommands.value = quickCommands.value.filter(cmd => cmd.id !== id)
   }
 
+  function updateQuickCommand(command: QuickCommand) {
+    const index = quickCommands.value.findIndex(cmd => cmd.id === command.id)
+    if (index !== -1) {
+      quickCommands.value[index] = command
+    }
+  }
+
   return {
     config,
     logConfig,
@@ -80,6 +87,7 @@ export const useSerialStore = defineStore('serial', () => {
     clearMessages,
     addQuickCommand,
     removeQuickCommand,
+    updateQuickCommand,
     error
   }
 })

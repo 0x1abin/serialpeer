@@ -5,7 +5,7 @@
         <h2 class="card-title">Quick Commands</h2>
         <button 
           class="btn btn-primary w-full" 
-          @click="showAddDialog = true"
+          @click="openAddDialog"
         >
           Add Command
         </button>
@@ -17,7 +17,7 @@
           :key="cmd.id"
           class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-2 bg-base-100 rounded-lg gap-2"
         >
-          <div class="flex-1">
+          <div class="flex-1 cursor-pointer" @click="() => openEditDialog(cmd)">
             <div class="font-medium">{{ cmd.name }}</div>
             <div class="text-sm opacity-70 break-all">{{ cmd.command }}</div>
           </div>
@@ -39,13 +39,17 @@
         </div>
       </div>
 
-      <dialog class="modal" :open="showAddDialog">
+      <dialog class="modal" :open="showDialog">
         <div class="modal-box">
-          <h3 class="font-bold text-lg">Add Quick Command</h3>
-          <QuickCommandForm v-model="newCommand" />
+          <h3 class="font-bold text-lg">
+            {{ isEditing ? 'Edit' : 'Add' }} Quick Command
+          </h3>
+          <QuickCommandForm v-model="commandForm" />
           <div class="modal-action">
-            <button class="btn" @click="showAddDialog = false">Cancel</button>
-            <button class="btn btn-primary" @click="addCommand">Add</button>
+            <button class="btn" @click="showDialog = false">Cancel</button>
+            <button class="btn btn-primary" @click="handleSubmit">
+              {{ isEditing ? 'Save' : 'Add' }}
+            </button>
           </div>
         </div>
       </dialog>
@@ -58,26 +62,53 @@ import type { QuickCommand } from '~/types/serial'
 import { useSerialStore } from '~/stores/serial'
 
 const store = useSerialStore()
-const showAddDialog = ref(false)
-const newCommand = ref<Omit<QuickCommand, 'id'>>({
+const showDialog = ref(false)
+const isEditing = ref(false)
+const editingId = ref<string | null>(null)
+const commandForm = ref<Omit<QuickCommand, 'id'>>({
   name: '',
   command: '',
   format: 'ASCII',
   addNewline: false
 })
 
-function addCommand() {
-  store.addQuickCommand({
-    ...newCommand.value,
-    id: crypto.randomUUID()
-  })
-  showAddDialog.value = false
-  newCommand.value = {
+function openAddDialog() {
+  isEditing.value = false
+  editingId.value = null
+  commandForm.value = {
     name: '',
     command: '',
     format: 'ASCII',
     addNewline: false
   }
+  showDialog.value = true
+}
+
+function openEditDialog(cmd: QuickCommand) {
+  isEditing.value = true
+  editingId.value = cmd.id
+  commandForm.value = {
+    name: cmd.name,
+    command: cmd.command,
+    format: cmd.format,
+    addNewline: cmd.addNewline
+  }
+  showDialog.value = true
+}
+
+function handleSubmit() {
+  if (isEditing.value && editingId.value) {
+    store.updateQuickCommand({
+      ...commandForm.value,
+      id: editingId.value
+    })
+  } else {
+    store.addQuickCommand({
+      ...commandForm.value,
+      id: crypto.randomUUID()
+    })
+  }
+  showDialog.value = false
 }
 
 function sendCommand(cmd: QuickCommand) {
