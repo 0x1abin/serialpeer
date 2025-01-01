@@ -2,13 +2,15 @@
   <div class="card bg-base-200">
     <div class="card-body">
       <div class="flex flex-col gap-2 mb-4">
-        <h2 class="card-title">Quick Commands</h2>
-        <button 
-          class="btn btn-primary w-full" 
-          @click="openAddDialog"
-        >
-          Add Command
-        </button>
+        <div class="flex justify-between items-center">
+          <h2 class="card-title">Quick Commands</h2>
+          <button 
+            class="btn btn-ghost btn-sm btn-square"
+            @click="openAddDialog"
+          >
+            <Icon name="ph:plus-bold" class="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       <div class="space-y-2 max-h-[300px] overflow-y-auto">
