@@ -4,12 +4,23 @@
       <div class="flex flex-col gap-2 mb-4">
         <div class="flex justify-between items-center">
           <h2 class="card-title">Quick Commands</h2>
-          <button 
-            class="btn btn-ghost btn-sm btn-square"
-            @click="openAddDialog"
-          >
-            <Icon name="ph:plus-bold" class="w-5 h-5" />
-          </button>
+          <div class="flex gap-2">
+            <button 
+              v-if="store.quickCommands.length > 0"
+              class="btn btn-ghost btn-sm btn-square"
+              :class="{ 'text-error': isDeleteMode }"
+              @click="isDeleteMode = !isDeleteMode"
+              title="Delete Mode"
+            >
+              <Icon name="ph:trash" class="w-5 h-5" />
+            </button>
+            <button 
+              class="btn btn-ghost btn-sm btn-square"
+              @click="openAddDialog"
+            >
+              <Icon name="ph:plus-bold" class="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -25,6 +36,7 @@
           </div>
           <div class="flex gap-2">
             <button 
+              v-if="isDeleteMode"
               class="btn btn-sm btn-error btn-square"
               @click="() => store.removeQuickCommand(cmd.id)"
             >
@@ -73,6 +85,7 @@ const commandForm = ref<Omit<QuickCommand, 'id'>>({
   format: 'ASCII',
   addNewline: false
 })
+const isDeleteMode = ref(false)
 
 function openAddDialog() {
   isEditing.value = false

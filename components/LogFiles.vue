@@ -4,6 +4,7 @@ import { serialDB } from '~/utils/db'
 
 const logFiles = ref<Awaited<ReturnType<typeof serialDB.getLogFiles>>>([])
 const updateInterval = ref<NodeJS.Timeout>()
+const isDeleteMode = ref(false)
 
 async function loadLogFiles() {
   logFiles.value = await serialDB.getLogFiles()
@@ -68,7 +69,18 @@ defineExpose({
 <template>
   <div class="card bg-base-200">
     <div class="card-body p-4">
-      <h2 class="card-title mb-4">Log Files</h2>
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="card-title">Log Files</h2>
+        <button 
+          v-if="sortedLogFiles.length > 0"
+          class="btn btn-ghost btn-sm btn-square"
+          :class="{ 'text-error': isDeleteMode }"
+          @click="isDeleteMode = !isDeleteMode"
+          title="Delete Mode"
+        >
+          <Icon name="ph:trash" class="w-5 h-5" />
+        </button>
+      </div>
 
       <div class="space-y-2 max-h-[250px] overflow-y-auto">
         <div 
@@ -88,6 +100,7 @@ defineExpose({
           </div>
           <div class="flex gap-2 ml-2 shrink-0">
             <button 
+              v-if="isDeleteMode"
               class="btn btn-sm btn-error btn-square"
               @click="deleteLog(file.id!)"
               title="Delete"
