@@ -24,8 +24,9 @@
 
       <div 
         ref="terminalContainer"
-        class="relative rounded-lg overflow-hidden"
-        :class="isMaximized ? 'h-[calc(100vh-90px)]' : 'h-[520px]'"
+        class="relative rounded-lg overflow-hidden resize-y"
+        :class="isMaximized ? 'h-[calc(100vh-90px)]' : 'min-h-[200px] h-[420px]'"
+        :style="{ maxHeight: isMaximized ? 'calc(100vh-90px)' : 'none' }"
       />
     </div>
   </div>
@@ -60,7 +61,22 @@ onMounted(() => {
   // 设置粘贴事件监听
   terminal.value?.onData(handlePasteData)
   
+  // 监听窗口大小变化
   window.addEventListener('resize', handleResize)
+  
+  // 添加 ResizeObserver 监听容器大小变化
+  const resizeObserver = new ResizeObserver(() => {
+    handleResize()
+  })
+  
+  if (terminalContainer.value) {
+    resizeObserver.observe(terminalContainer.value)
+  }
+  
+  // 在组件卸载时清理 observer
+  onUnmounted(() => {
+    resizeObserver.disconnect()
+  })
 })
 
 onUnmounted(() => {
@@ -125,11 +141,15 @@ onMounted(() => {
   height: 100%;
   padding: 8px;
   border-radius: 0.5rem;
+  /* 确保 xterm 容器能够正确填充 */
+  display: flex;
+  flex-direction: column;
 }
 
 .xterm-viewport {
   overflow-y: auto !important;
   border-radius: 0.5rem;
+  flex: 1;
 }
 
 .card {
@@ -149,5 +169,20 @@ onMounted(() => {
 .terminal-container {
   background-color: var(--b3);
   border-radius: 0.5rem;
+  transition: height 0.2s ease;
+}
+
+.resize-y {
+  resize: vertical;
+  overflow: auto;
+  /* 确保内容能够正确填充可调整大小的容器 */
+  display: flex;
+  flex-direction: column;
+}
+
+.resize-y::-webkit-resizer {
+  background-color: var(--b3);
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
 }
 </style>
