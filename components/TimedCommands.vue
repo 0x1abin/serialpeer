@@ -6,6 +6,7 @@
           <h2 class="card-title">Timed Commands</h2>
           <div class="flex gap-2">
             <button 
+              v-if="store.timedCommands.length > 0"
               class="btn btn-ghost btn-sm btn-square"
               :class="{ 'text-error': isDeleteMode }"
               @click="isDeleteMode = !isDeleteMode"
