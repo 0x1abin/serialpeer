@@ -70,7 +70,7 @@ defineExpose({
     <div class="card-body p-4">
       <h2 class="card-title mb-4">Log Files</h2>
 
-      <div class="space-y-2">
+      <div class="space-y-2 max-h-[250px] overflow-y-auto">
         <div 
           v-for="file in sortedLogFiles" 
           :key="file.id"
