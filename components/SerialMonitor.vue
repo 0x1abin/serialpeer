@@ -215,7 +215,11 @@ function clearTerminal() {
 }
 
 function exportLogs() {
-  const content = store.messages.map(msg => msg.data).join('')
+  const content = store.messages
+    .map(msg => msg.data)
+    .join('')
+    // 使用正则表达式移除颜色标签
+    .replace(/\[\d+(?:;\d+)*m/g, '')
   const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
   saveAs(blob, `serial-logs-${new Date().toISOString()}.txt`)
 }
