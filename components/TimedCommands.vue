@@ -11,7 +11,7 @@
         </button>
       </div>
 
-      <div class="space-y-2">
+      <div class="space-y-2 max-h-[300px] overflow-y-auto">
         <div 
           v-for="cmd in store.timedCommands" 
           :key="cmd.id"
