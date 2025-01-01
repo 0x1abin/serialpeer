@@ -27,10 +27,15 @@ function formatTimestamp(timestamp: number): string {
   return new Date(timestamp).toLocaleString()
 }
 
+function formatDisplayName(name: string): string {
+  return name.replace(/^Serial Log /, '')
+}
+
 async function downloadLog(file: typeof logFiles.value[0]) {
   const content = file.content.join('\n')
   const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
-  saveAs(blob, `${file.name}.txt`)
+  const timestamp = new Date(file.createdAt).toISOString().replace(/[:.]/g, '-')
+  saveAs(blob, `SerialLog_${timestamp}.txt`)
 }
 
 async function deleteLog(id: number) {
@@ -67,7 +72,7 @@ defineExpose({
         >
           <div class="flex-1 min-w-0">
             <div class="font-medium whitespace-nowrap overflow-hidden text-ellipsis">
-              {{ file.name }}
+              {{ formatDisplayName(file.name) }}
             </div>
             <div class="text-sm opacity-70 flex gap-2">
               <span>{{ formatFileSize(file.content) }}</span>
@@ -77,18 +82,18 @@ defineExpose({
           </div>
           <div class="flex gap-2 ml-2 shrink-0">
             <button 
-              class="btn btn-sm btn-ghost hover:scale-105 transition-transform"
-              @click="downloadLog(file)"
-              title="Download"
-            >
-              <Icon name="ph:download" class="w-4 h-4" />
-            </button>
-            <button 
-              class="btn btn-sm btn-error btn-ghost hover:scale-105 transition-transform"
+              class="btn btn-sm btn-error btn-square"
               @click="deleteLog(file.id!)"
               title="Delete"
             >
               <Icon name="ph:trash" class="w-4 h-4" />
+            </button>
+            <button 
+              class="btn btn-sm btn-square"
+              @click="downloadLog(file)"
+              title="Download"
+            >
+              <Icon name="ph:download" class="w-4 h-4" />
             </button>
           </div>
         </div>
