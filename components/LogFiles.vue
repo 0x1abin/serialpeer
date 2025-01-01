@@ -9,6 +9,11 @@ async function loadLogFiles() {
   logFiles.value = await serialDB.getLogFiles()
 }
 
+// 计算属性：按更新时间倒序排列的文件列表
+const sortedLogFiles = computed(() => {
+  return [...logFiles.value].sort((a, b) => b.updatedAt - a.updatedAt)
+})
+
 function formatFileSize(content: string[]): string {
   const bytes = content.join('\n').length
   if (bytes < 1024) return `${bytes} B`
@@ -67,7 +72,7 @@ defineExpose({
 
       <div class="space-y-2">
         <div 
-          v-for="file in logFiles" 
+          v-for="file in sortedLogFiles" 
           :key="file.id"
           class="flex justify-between items-center p-2 bg-base-100 rounded-lg hover:bg-base-200 transition-colors"
         >
@@ -100,7 +105,7 @@ defineExpose({
         </div>
 
         <div 
-          v-if="logFiles.length === 0" 
+          v-if="sortedLogFiles.length === 0" 
           class="text-center py-4 text-base-content/50"
         >
           No log files yet
