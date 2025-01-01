@@ -10,6 +10,7 @@
         <div class="space-y-3">
           <SerialConnect />
           <QuickCommands />
+          <TimedCommands />
           <LogFiles />
         </div>
         

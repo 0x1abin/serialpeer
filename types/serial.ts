@@ -31,3 +31,11 @@ export interface LogConfig {
 export interface SendConfig {
   autoNewline: boolean;
 }
+
+export interface TimedCommand {
+  id: string;
+  quickCommandId: string; // 关联的 QuickCommand 的 id
+  interval: number; // 间隔时间(毫秒)
+  isLoop: boolean; // 是否循环发送
+  isActive: boolean; // 是否正在运行
+}
