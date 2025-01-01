@@ -25,7 +25,7 @@
       <div 
         ref="terminalContainer"
         class="relative rounded-lg overflow-hidden"
-        :class="isMaximized ? 'h-[calc(100vh-90px)]' : 'h-[570px]'"
+        :class="isMaximized ? 'h-[calc(100vh-90px)]' : 'h-[418px]'"
       />
     </div>
   </div>
