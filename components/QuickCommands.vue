@@ -42,33 +42,7 @@
       <dialog class="modal" :open="showAddDialog">
         <div class="modal-box">
           <h3 class="font-bold text-lg">Add Quick Command</h3>
-          <div class="py-4 space-y-4">
-            <div class="form-control">
-              <label class="label">Name</label>
-              <input v-model="newCommand.name" type="text" class="input input-bordered" />
-            </div>
-            <div class="form-control">
-              <label class="label">Command</label>
-              <input v-model="newCommand.command" type="text" class="input input-bordered" />
-            </div>
-            <div class="form-control">
-              <label class="label">Format</label>
-              <select v-model="newCommand.format" class="select select-bordered">
-                <option value="ASCII">ASCII</option>
-                <option value="HEX">HEX</option>
-              </select>
-            </div>
-            <div class="form-control">
-              <label class="label cursor-pointer">
-                <span class="label-text">Add Newline</span>
-                <input 
-                  type="checkbox" 
-                  class="toggle toggle-sm"
-                  v-model="newCommand.addNewline" 
-                />
-              </label>
-            </div>
-          </div>
+          <QuickCommandForm v-model="newCommand" />
           <div class="modal-action">
             <button class="btn" @click="showAddDialog = false">Cancel</button>
             <button class="btn btn-primary" @click="addCommand">Add</button>
@@ -81,6 +55,7 @@
 
 <script setup lang="ts">
 import type { QuickCommand } from '~/types/serial'
+import { useSerialStore } from '~/stores/serial'
 
 const store = useSerialStore()
 const showAddDialog = ref(false)
