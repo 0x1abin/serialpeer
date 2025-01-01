@@ -157,6 +157,18 @@ export const useSerialStore = defineStore('serial', () => {
     command.isActive = false
   }
 
+  function updateTimedCommand(command: TimedCommand) {
+    const index = timedCommands.value.findIndex(cmd => cmd.id === command.id)
+    if (index !== -1) {
+      // If the command was active, stop it first
+      if (timedCommands.value[index].isActive) {
+        stopTimedCommand(command.id)
+      }
+      // Update the command
+      timedCommands.value[index] = command
+    }
+  }
+
   return {
     config,
     logConfig,
@@ -176,5 +188,6 @@ export const useSerialStore = defineStore('serial', () => {
     removeTimedCommand,
     startTimedCommand,
     stopTimedCommand,
+    updateTimedCommand,
   }
 })

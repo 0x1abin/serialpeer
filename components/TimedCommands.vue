@@ -17,7 +17,7 @@
           :key="cmd.id"
           class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-2 bg-base-100 rounded-lg gap-2"
         >
-          <div class="flex-1">
+          <div class="flex-1 cursor-pointer" @click="() => openEditDialog(cmd)">
             <div class="font-medium">
               {{ getQuickCommandName(cmd.quickCommandId) }}
             </div>
@@ -46,43 +46,10 @@
 
       <dialog class="modal" :open="showDialog">
         <div class="modal-box">
-          <h3 class="font-bold text-lg">Add Timed Command</h3>
-          <div class="py-4 space-y-4">
-            <div class="form-control">
-              <label class="label">Quick Command</label>
-              <select v-model="commandForm.quickCommandId" class="select select-bordered">
-                <option value="" disabled>Select a command</option>
-                <option 
-                  v-for="cmd in store.quickCommands" 
-                  :key="cmd.id" 
-                  :value="cmd.id"
-                >
-                  {{ cmd.name }}
-                </option>
-              </select>
-            </div>
-            
-            <div class="form-control">
-              <label class="label">Interval (ms)</label>
-              <input 
-                v-model.number="commandForm.interval" 
-                type="number" 
-                min="100"
-                class="input input-bordered" 
-              />
-            </div>
-            
-            <div class="form-control">
-              <label class="label cursor-pointer">
-                <span class="label-text">Loop</span>
-                <input 
-                  type="checkbox" 
-                  class="toggle toggle-sm"
-                  v-model="commandForm.isLoop" 
-                />
-              </label>
-            </div>
-          </div>
+          <h3 class="font-bold text-lg">
+            {{ isEditing ? 'Edit' : 'Add' }} Timed Command
+          </h3>
+          <TimedCommandForm v-model="commandForm" />
           <div class="modal-action">
             <button class="btn" @click="showDialog = false">Cancel</button>
             <button 
@@ -90,7 +57,7 @@
               @click="handleSubmit"
               :disabled="!commandForm.quickCommandId || !commandForm.interval"
             >
-              Add
+              {{ isEditing ? 'Save' : 'Add' }}
             </button>
           </div>
         </div>
@@ -105,6 +72,8 @@ import { useSerialStore } from '~/stores/serial'
 
 const store = useSerialStore()
 const showDialog = ref(false)
+const isEditing = ref(false)
+const editingId = ref<string | null>(null)
 const commandForm = ref<Omit<TimedCommand, 'id' | 'isActive'>>({
   quickCommandId: '',
   interval: 1000,
@@ -116,6 +85,8 @@ function getQuickCommandName(id: string) {
 }
 
 function openAddDialog() {
+  isEditing.value = false
+  editingId.value = null
   commandForm.value = {
     quickCommandId: '',
     interval: 1000,
@@ -124,12 +95,31 @@ function openAddDialog() {
   showDialog.value = true
 }
 
+function openEditDialog(cmd: TimedCommand) {
+  isEditing.value = true
+  editingId.value = cmd.id
+  commandForm.value = {
+    quickCommandId: cmd.quickCommandId,
+    interval: cmd.interval,
+    isLoop: cmd.isLoop,
+  }
+  showDialog.value = true
+}
+
 function handleSubmit() {
-  store.addTimedCommand({
-    ...commandForm.value,
-    id: crypto.randomUUID(),
-    isActive: false,
-  })
+  if (isEditing.value && editingId.value) {
+    store.updateTimedCommand({
+      ...commandForm.value,
+      id: editingId.value,
+      isActive: false,
+    })
+  } else {
+    store.addTimedCommand({
+      ...commandForm.value,
+      id: crypto.randomUUID(),
+      isActive: false,
+    })
+  }
   showDialog.value = false
 }
 
