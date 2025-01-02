@@ -21,7 +21,7 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'SerialPeer - Modern Serial Debug Tool with P2P Sharing' }
+        { name: 'description', content: 'SerialPeer - Modern Web Serial Debug Tool with P2P Sharing' }
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }
