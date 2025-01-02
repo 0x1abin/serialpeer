@@ -20,7 +20,7 @@ export const useSerialStore = defineStore('serial', () => {
     showTimestamp: localStorage.getItem('serialLogShowTimestamp') === 'true' ? true : false
   })
 
-  // 监听 showTimestamp 变化并保存到 localStorage
+  // Watch showTimestamp changes and save to localStorage
   watch(() => logConfig.value.showTimestamp, (newValue) => {
     localStorage.setItem('serialLogShowTimestamp', newValue.toString())
   })
@@ -29,7 +29,7 @@ export const useSerialStore = defineStore('serial', () => {
     JSON.parse(localStorage.getItem('serialQuickCommands') || '[]')
   )
 
-  // 监听 quickCommands 变化并保存到 localStorage
+  // Watch quickCommands changes and save to localStorage
   watch(() => quickCommands.value, (newCommands) => {
     localStorage.setItem('serialQuickCommands', JSON.stringify(newCommands))
   }, { deep: true })
@@ -42,7 +42,7 @@ export const useSerialStore = defineStore('serial', () => {
   
   const timerIds = new Map<string, NodeJS.Timeout>()
 
-  // 监听 timedCommands 变化并保存到 localStorage
+  // Watch timedCommands changes and save to localStorage
   watch(() => timedCommands.value, (newCommands) => {
     localStorage.setItem('serialTimedCommands', JSON.stringify(newCommands))
   }, { deep: true })
@@ -50,12 +50,12 @@ export const useSerialStore = defineStore('serial', () => {
   async function handleConnect() {
     error.value = null
     try {
-      // 先停止所有定时任务
+      // Stop all timed commands first
       timedCommands.value.forEach(cmd => {
         if (cmd.isActive) {
           stopTimedCommand(cmd.id)
         }
-        // 确保所有任务的状态都是停止的
+        // Ensure all commands are in stopped state
         cmd.isActive = false
       })
 
@@ -72,12 +72,17 @@ export const useSerialStore = defineStore('serial', () => {
 
   async function handleDisconnect() {
     try {
-      // 停止所有定时任务
+      // Stop log recording if it's active
+      if (isLogRecording.value) {
+        await stopLogRecording()
+      }
+      
+      // Stop all timed commands
       timedCommands.value.forEach(cmd => {
         if (cmd.isActive) {
           stopTimedCommand(cmd.id)
         }
-        // 确保所有任务的状态都是停止的
+        // Ensure all commands are in stopped state
         cmd.isActive = false
       })
       await stopReading()
