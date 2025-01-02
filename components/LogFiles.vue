@@ -82,7 +82,7 @@ defineExpose({
   <div class="card bg-base-200">
     <div class="card-body p-4">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="card-title">Log Files</h2>
+        <h2 class="card-title">Log Records</h2>
         <div class="flex gap-2">
           <button 
             v-if="sortedLogFiles.length > 0"
