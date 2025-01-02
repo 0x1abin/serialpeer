@@ -25,31 +25,36 @@
       </div>
 
       <div class="space-y-2 max-h-[300px] overflow-y-auto">
-        <div 
-          v-for="cmd in store.quickCommands" 
-          :key="cmd.id"
-          class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-2 bg-base-100 rounded-lg gap-2"
-        >
-          <div class="flex-1 cursor-pointer" @click="() => openEditDialog(cmd)">
-            <div class="font-medium">{{ cmd.name }}</div>
-            <div class="text-sm opacity-70 break-all">{{ cmd.command }}</div>
+        <template v-if="store.quickCommands.length > 0">
+          <div 
+            v-for="cmd in store.quickCommands" 
+            :key="cmd.id"
+            class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-2 bg-base-100 rounded-lg gap-2"
+          >
+            <div class="flex-1 cursor-pointer" @click="() => openEditDialog(cmd)">
+              <div class="font-medium">{{ cmd.name }}</div>
+              <div class="text-sm opacity-70 break-all">{{ cmd.command }}</div>
+            </div>
+            <div class="flex gap-2">
+              <button 
+                v-if="isDeleteMode"
+                class="btn btn-sm btn-error btn-square"
+                @click="() => store.removeQuickCommand(cmd.id)"
+              >
+                <Icon name="ph:trash" class="w-4 h-4" />
+              </button>
+              <button 
+                class="btn btn-sm"
+                @click="() => sendCommand(cmd)"
+                :disabled="!store.isConnected"
+              >
+                Send
+              </button>
+            </div>
           </div>
-          <div class="flex gap-2">
-            <button 
-              v-if="isDeleteMode"
-              class="btn btn-sm btn-error btn-square"
-              @click="() => store.removeQuickCommand(cmd.id)"
-            >
-              <Icon name="ph:trash" class="w-4 h-4" />
-            </button>
-            <button 
-              class="btn btn-sm"
-              @click="() => sendCommand(cmd)"
-              :disabled="!store.isConnected"
-            >
-              Send
-            </button>
-          </div>
+        </template>
+        <div v-else class="bg-base-content/5 rounded-lg py-2 text-center text-sm text-base-content/50">
+          No commands
         </div>
       </div>
 

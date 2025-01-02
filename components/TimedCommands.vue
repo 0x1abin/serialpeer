@@ -25,36 +25,41 @@
       </div>
 
       <div class="space-y-2 max-h-[300px] overflow-y-auto">
-        <div 
-          v-for="cmd in store.timedCommands" 
-          :key="cmd.id"
-          class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-2 bg-base-100 rounded-lg gap-2"
-        >
-          <div class="flex-1 cursor-pointer" @click="() => openEditDialog(cmd)">
-            <div class="font-medium">
-              {{ getQuickCommandName(cmd.quickCommandId) }}
+        <template v-if="store.timedCommands.length > 0">
+          <div 
+            v-for="cmd in store.timedCommands" 
+            :key="cmd.id"
+            class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-2 bg-base-100 rounded-lg gap-2"
+          >
+            <div class="flex-1 cursor-pointer" @click="() => openEditDialog(cmd)">
+              <div class="font-medium">
+                {{ getQuickCommandName(cmd.quickCommandId) }}
+              </div>
+              <div class="text-sm opacity-70">
+                {{ cmd.interval }}ms | {{ cmd.isLoop ? 'Loop' : 'Once' }}
+              </div>
             </div>
-            <div class="text-sm opacity-70">
-              {{ cmd.interval }}ms | {{ cmd.isLoop ? 'Loop' : 'Once' }}
+            <div class="flex gap-2">
+              <button 
+                v-if="isDeleteMode"
+                class="btn btn-sm btn-error btn-square"
+                @click="() => store.removeTimedCommand(cmd.id)"
+              >
+                <Icon name="ph:trash" class="w-4 h-4" />
+              </button>
+              <button 
+                class="btn btn-sm"
+                :class="cmd.isActive ? 'btn-error' : 'btn-success'"
+                @click="() => toggleCommand(cmd)"
+                :disabled="!store.isConnected"
+              >
+                {{ cmd.isActive ? 'Stop' : 'Start' }}
+              </button>
             </div>
           </div>
-          <div class="flex gap-2">
-            <button 
-              v-if="isDeleteMode"
-              class="btn btn-sm btn-error btn-square"
-              @click="() => store.removeTimedCommand(cmd.id)"
-            >
-              <Icon name="ph:trash" class="w-4 h-4" />
-            </button>
-            <button 
-              class="btn btn-sm"
-              :class="cmd.isActive ? 'btn-error' : 'btn-success'"
-              @click="() => toggleCommand(cmd)"
-              :disabled="!store.isConnected"
-            >
-              {{ cmd.isActive ? 'Stop' : 'Start' }}
-            </button>
-          </div>
+        </template>
+        <div v-else class="bg-base-content/5 rounded-lg py-2 text-center text-sm text-base-content/50">
+          No timed commands
         </div>
       </div>
 

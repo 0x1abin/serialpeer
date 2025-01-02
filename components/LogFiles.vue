@@ -112,50 +112,48 @@ defineExpose({
       </div>
 
       <div class="space-y-2 max-h-[250px] overflow-y-auto">
-        <div 
-          v-for="file in sortedLogFiles" 
-          :key="file.id"
-          class="flex justify-between items-center p-2 bg-base-100 rounded-lg hover:bg-base-200 transition-colors"
-        >
-          <div class="flex-1 min-w-0">
-            <div class="font-medium whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-2">
-              <div 
-                v-if="store.isLogRecording && file.id === Math.max(...sortedLogFiles.map(f => f.id!))"
-                class="w-2 h-2 rounded-full bg-error animate-pulse"
-                title="Recording"
-              />
-              {{ formatDisplayName(file.createdAt) }}
+        <template v-if="sortedLogFiles.length > 0">
+          <div 
+            v-for="file in sortedLogFiles" 
+            :key="file.id"
+            class="flex justify-between items-center p-2 bg-base-100 rounded-lg hover:bg-base-200 transition-colors"
+          >
+            <div class="flex-1 min-w-0">
+              <div class="font-medium whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-2">
+                <div 
+                  v-if="store.isLogRecording && file.id === Math.max(...sortedLogFiles.map(f => f.id!))"
+                  class="w-2 h-2 rounded-full bg-error animate-pulse"
+                  title="Recording"
+                />
+                {{ formatDisplayName(file.createdAt) }}
+              </div>
+              <div class="text-sm opacity-70 flex gap-2">
+                <span>{{ formatFileSize(file.content) }}</span>
+                <span>·</span>
+                <span>{{ formatTimestamp(file.updatedAt) }}</span>
+              </div>
             </div>
-            <div class="text-sm opacity-70 flex gap-2">
-              <span>{{ formatFileSize(file.content) }}</span>
-              <span>·</span>
-              <span>{{ formatTimestamp(file.updatedAt) }}</span>
+            <div class="flex gap-2 ml-2 shrink-0">
+              <button 
+                v-if="isDeleteMode"
+                class="btn btn-sm btn-error btn-square"
+                @click="deleteLog(file.id!)"
+                title="Delete"
+              >
+                <Icon name="ph:trash" class="w-4 h-4" />
+              </button>
+              <button 
+                class="btn btn-sm btn-square"
+                @click="downloadLog(file)"
+                title="Download"
+              >
+                <Icon name="ph:download" class="w-4 h-4" />
+              </button>
             </div>
           </div>
-          <div class="flex gap-2 ml-2 shrink-0">
-            <button 
-              v-if="isDeleteMode"
-              class="btn btn-sm btn-error btn-square"
-              @click="deleteLog(file.id!)"
-              title="Delete"
-            >
-              <Icon name="ph:trash" class="w-4 h-4" />
-            </button>
-            <button 
-              class="btn btn-sm btn-square"
-              @click="downloadLog(file)"
-              title="Download"
-            >
-              <Icon name="ph:download" class="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        <div 
-          v-if="sortedLogFiles.length === 0" 
-          class="text-center py-4 text-base-content/50"
-        >
-          No log files yet
+        </template>
+        <div v-else class="bg-base-content/5 rounded-lg py-2 text-center text-sm text-base-content/50">
+          No log files
         </div>
       </div>
     </div>
