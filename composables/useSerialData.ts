@@ -10,6 +10,7 @@ export function useSerialData() {
   const currentLogId = ref<number | null>(null)
   let saveTimeout: NodeJS.Timeout | null = null
   let partialLine = ''
+  const isLogRecording = ref(false)
 
   async function initializeNewLog() {
     currentLogId.value = await serialDB.saveLogFile({
@@ -42,16 +43,14 @@ export function useSerialData() {
     const lines: string[] = []
     let text = partialLine + data
     
-    // 处理不同类型的换行符
     const matches = text.split(/\r\n|\n|\r/)
-    
-    // 保存最后一个不完整的行
     partialLine = matches[matches.length - 1]
     
-    // 处理完整的行
-    for (let i = 0; i < matches.length - 1; i++) {
-      if (matches[i]) {
-        lines.push(matches[i])
+    if (isLogRecording.value) {
+      for (let i = 0; i < matches.length - 1; i++) {
+        if (matches[i]) {
+          lines.push(matches[i])
+        }
       }
     }
 
@@ -60,7 +59,6 @@ export function useSerialData() {
 
   async function startReading(port: SerialPort) {
     try {
-      await initializeNewLog()
       partialLine = '' // 重置部分行缓存
 
       if (writer.value) {
@@ -198,11 +196,38 @@ export function useSerialData() {
     messages.value = []
   }
 
+  async function startLogRecording() {
+    if (isLogRecording.value) return
+    isLogRecording.value = true
+    await initializeNewLog()
+  }
+
+  async function stopLogRecording() {
+    if (!isLogRecording.value) return
+    isLogRecording.value = false
+    // 保存最后一个不完整的行（如果有）
+    if (partialLine) {
+      messageBuffer.value.push(partialLine)
+      partialLine = ''
+    }
+    // 保存剩余数据
+    if (messageBuffer.value.length > 0) {
+      await saveBufferToDb()
+    }
+    if (saveTimeout) {
+      clearTimeout(saveTimeout)
+    }
+    currentLogId.value = null
+  }
+
   return {
     messages,
     startReading,
     stopReading,
     sendData,
-    clearMessages
+    clearMessages,
+    startLogRecording,
+    stopLogRecording,
+    isLogRecording
   }
 }

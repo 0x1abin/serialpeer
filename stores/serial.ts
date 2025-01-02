@@ -4,7 +4,7 @@ import type { SerialConfig, QuickCommand, LogConfig, TimedCommand } from '~/type
 
 export const useSerialStore = defineStore('serial', () => {
   const { port, isConnected, connect, disconnect } = useSerialPort()
-  const { messages, startReading, stopReading, sendData, clearMessages } = useSerialData()
+  const { messages, startReading, stopReading, sendData, clearMessages, isLogRecording, startLogRecording, stopLogRecording } = useSerialData()
 
   const config = ref<SerialConfig>({
     portId: '',
@@ -189,5 +189,8 @@ export const useSerialStore = defineStore('serial', () => {
     startTimedCommand,
     stopTimedCommand,
     updateTimedCommand,
+    isLogRecording,
+    startLogRecording,
+    stopLogRecording
   }
 })

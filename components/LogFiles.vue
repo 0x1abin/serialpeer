@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { saveAs } from 'file-saver'
 import { serialDB } from '~/utils/db'
+import { useSerialStore } from '~/stores/serial'
+
+const store = useSerialStore()
+
 
 const logFiles = ref<Awaited<ReturnType<typeof serialDB.getLogFiles>>>([])
 const updateInterval = ref<NodeJS.Timeout>()
@@ -50,6 +54,14 @@ async function deleteLog(id: number) {
   await loadLogFiles()
 }
 
+async function toggleLogging() {
+  if (store.isLogRecording) {
+    store.stopLogRecording()
+  } else {
+    store.startLogRecording()
+  }
+}
+
 onMounted(() => {
   loadLogFiles()
   updateInterval.value = setInterval(loadLogFiles, 1000)
@@ -71,15 +83,32 @@ defineExpose({
     <div class="card-body p-4">
       <div class="flex justify-between items-center mb-4">
         <h2 class="card-title">Log Files</h2>
-        <button 
-          v-if="sortedLogFiles.length > 0"
-          class="btn btn-ghost btn-sm btn-square"
-          :class="{ 'text-error': isDeleteMode }"
-          @click="isDeleteMode = !isDeleteMode"
-          title="Delete Mode"
-        >
-          <Icon name="ph:trash" class="w-5 h-5" />
-        </button>
+        <div class="flex gap-2">
+          <button 
+            v-if="sortedLogFiles.length > 0"
+            class="btn btn-ghost btn-sm btn-square"
+            :class="{ 'text-error': isDeleteMode }"
+            @click="isDeleteMode = !isDeleteMode"
+            title="Delete Mode"
+          >
+            <Icon name="ph:trash" class="w-5 h-5" />
+          </button>
+          <button 
+            class="btn btn-ghost btn-sm btn-square"
+            :class="{ 
+              'text-success': store.isLogRecording,
+              'opacity-50 cursor-not-allowed': !store.isConnected 
+            }"
+            @click="toggleLogging"
+            :disabled="!store.isConnected"
+            :title="store.isLogRecording ? 'Stop Recording' : 'Start Recording'"
+          >
+            <Icon 
+              :name="store.isLogRecording ? 'ph:stop-circle' : 'ph:plus-bold'" 
+              class="w-5 h-5" 
+            />
+          </button>
+        </div>
       </div>
 
       <div class="space-y-2 max-h-[250px] overflow-y-auto">
