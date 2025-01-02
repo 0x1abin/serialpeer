@@ -36,7 +36,7 @@ export function useSerialPort() {
       } catch (e) {
         error.value = 'Failed to open serial port. Please check if the device is in use by another program or if the port settings are correct.'
         console.error('Failed to open serial port:', e)
-        throw new Error('Failed to open serial port. Please check if the device is in use by another program or if the port settings are correct.')
+        throw new Error(error.value)
       }
     } catch (e) {
       if ((e as Error).name === 'NotFoundError') {
