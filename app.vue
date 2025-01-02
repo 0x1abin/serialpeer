@@ -11,7 +11,7 @@
           <SerialConnect />
           <QuickCommands />
           <TimedCommands />
-          <LogFiles />
+          <LogRecords />
         </div>
         
         <div class="md:col-span-3 space-y-3">
