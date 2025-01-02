@@ -118,7 +118,12 @@ defineExpose({
           class="flex justify-between items-center p-2 bg-base-100 rounded-lg hover:bg-base-200 transition-colors"
         >
           <div class="flex-1 min-w-0">
-            <div class="font-medium whitespace-nowrap overflow-hidden text-ellipsis">
+            <div class="font-medium whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-2">
+              <div 
+                v-if="store.isLogRecording && file.id === Math.max(...sortedLogFiles.map(f => f.id!))"
+                class="w-2 h-2 rounded-full bg-error animate-pulse"
+                title="Recording"
+              />
               {{ formatDisplayName(file.createdAt) }}
             </div>
             <div class="text-sm opacity-70 flex gap-2">
