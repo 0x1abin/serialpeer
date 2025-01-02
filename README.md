@@ -1,6 +1,11 @@
-# Web Serial Debug Tool
+# SerialPeer
 
-A web-based serial port debugging tool built with Nuxt 3, providing a modern interface for serial communication.
+A modern Web serial debugging tool with P2P sharing capabilities, built with Nuxt 3.  
+Providing a sleek interface for serial communication and real-time collaboration.
+
+<p align="center">
+  <b>🚧 P2P sharing feature coming soon! 🚧</b>
+</p>
 
 ## Features
 
@@ -13,6 +18,13 @@ A web-based serial port debugging tool built with Nuxt 3, providing a modern int
 - 💻 Cross-platform (works in Chrome and Edge)
 - 🌓 Light/Dark theme support
 
+### Coming Soon
+
+- 🌐 P2P data sharing via WebRTC
+- 🔗 Session sharing and collaboration
+- 🤝 Command sets sharing
+- 🔒 Secure peer-to-peer connection
+
 ## Prerequisites
 
 - Node.js 16.x or later
@@ -23,8 +35,8 @@ A web-based serial port debugging tool built with Nuxt 3, providing a modern int
 
 ```bash
 # Clone the repository
-git clone https://github.com/0x1abin/uart0.git
-cd uart0
+git clone https://github.com/0x1abin/serialpeer.git
+cd serialpeer
 
 # Install dependencies
 npm install
@@ -56,40 +68,37 @@ npm run preview
    - Select your serial port settings (baud rate, data bits, etc.)
    - Click "Connect" to establish connection
 
-2. **Send Data**
+2. **Send and Monitor Data**
    - Enter data in ASCII or HEX format
-   - Click "Send" or press Enter to transmit
-
-3. **Monitor Data**
-   - Received data is displayed in the monitor window
-   - Toggle timestamp display
+   - Real-time data monitoring with timestamp
    - Clear or export logs as needed
 
-4. **Quick Commands**
+3. **Quick Commands**
    - Save frequently used commands
    - Send with a single click
+   - Share command sets with peers
+
+4. **P2P Sharing**
+   - Share your serial session with peers
+   - Real-time collaboration
+   - Secure peer-to-peer connection
+   - No server required for data transfer
 
 ## Browser Compatibility
 
-The Web Serial API is currently supported in:
+The Web Serial API and WebRTC are supported in:
 - Chrome 89 or later
 - Edge 89 or later
 - Chrome for Android (with USB support)
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
+## Tech Stack
 
-- Built with [Nuxt 3](https://nuxt.com/)
-- UI components from [DaisyUI](https://daisyui.com/)
-- Icons from [Nuxt Icon](https://github.com/nuxt-modules/icon)
+- [Nuxt 3](https://nuxt.com/) - The Vue.js Framework
+- [WebRTC](https://webrtc.org/) - Real-time communication
+- [Web Serial API](https://developer.mozilla.org/en-US/docs/Web/API/Serial) - Serial communication
+- [DaisyUI](https://daisyui.com/) - UI components
+- [Nuxt Icon](https://github.com/nuxt-modules/icon) - Icon system
