@@ -17,10 +17,14 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'Web Serial Debug',
+      title: 'SerialPeer',
       meta: [
         { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'description', content: 'SerialPeer - Modern Serial Debug Tool with P2P Sharing' }
+      ],
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }
       ]
     }
   },

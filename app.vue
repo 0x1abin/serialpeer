@@ -2,7 +2,10 @@
   <div class="min-h-screen bg-base-100" :data-theme="colorMode.value">
     <div class="container mx-auto p-4">
       <header class="flex justify-between items-center mb-4">
-        <h1 class="text-2xl font-bold">Web Serial Debug</h1>
+        <div class="flex items-center gap-3">
+          <img src="/logo.svg" alt="SerialPeer Logo" class="w-8 h-8" />
+          <h1 class="text-2xl font-bold">SerialPeer</h1>
+        </div>
         <ColorModeButton />
       </header>
 

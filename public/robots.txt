@@ -1,1 +1,4 @@
+User-agent: *
+Allow: /
 
+# SerialPeer - Modern Serial Debug Tool with P2P Sharing
