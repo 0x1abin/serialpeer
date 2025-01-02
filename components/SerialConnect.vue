@@ -7,9 +7,25 @@
         <div class="form-control w-full">
           <div class="join join-vertical w-full">
             <div class="px-1">Baud Rate</div>
-            <select v-model="store.config.baudRate" class="select select-bordered w-full" :disabled="store.isConnected">
+            <select v-model="selectedBaudRate" class="select select-bordered w-full" :disabled="store.isConnected">
               <option v-for="rate in baudRates" :key="rate" :value="rate">{{ rate }}</option>
+              <option value="custom">Custom</option>
             </select>
+          </div>
+        </div>
+
+        <div v-if="selectedBaudRate === 'custom'" class="form-control w-full">
+          <div class="join join-vertical w-full">
+            <div class="px-1">Custom Baud Rate</div>
+            <input
+              v-model.number="customBaudRate"
+              type="number"
+              class="input input-bordered w-full"
+              :disabled="store.isConnected"
+              min="1"
+              placeholder="Enter custom baud rate"
+              @input="updateBaudRate"
+            />
           </div>
         </div>
 
@@ -65,7 +81,22 @@
 
 <script setup lang="ts">
 const store = useSerialStore()
-const baudRates = [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600]
+const baudRates = [4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800]
+
+const selectedBaudRate = ref(store.config.baudRate)
+const customBaudRate = ref(store.config.baudRate)
+
+watch(selectedBaudRate, (newValue) => {
+  if (newValue !== 'custom') {
+    store.config.baudRate = newValue
+  }
+})
+
+function updateBaudRate() {
+  if (customBaudRate.value > 0) {
+    store.config.baudRate = customBaudRate.value
+  }
+}
 
 async function handleConnection() {
   try {
