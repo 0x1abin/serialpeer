@@ -83,12 +83,49 @@
 const store = useSerialStore()
 const baudRates = [4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800]
 
-const selectedBaudRate = ref(store.config.baudRate)
-const customBaudRate = ref(store.config.baudRate)
+// Load saved settings from localStorage, use default values if not found
+const savedSettings = JSON.parse(localStorage.getItem('serialSettings') || '{}')
+
+// Initialize baud rate selection and check if it's a custom value
+const isCustomBaudRate = !baudRates.includes(savedSettings.baudRate)
+const selectedBaudRate = ref(isCustomBaudRate ? 'custom' : (savedSettings.baudRate || store.config.baudRate))
+const customBaudRate = ref(isCustomBaudRate ? savedSettings.baudRate : store.config.baudRate)
+
+// Apply saved settings when component is mounted
+onMounted(() => {
+  if (savedSettings) {
+    // If using custom baud rate, apply the saved custom value
+    if (isCustomBaudRate) {
+      store.config.baudRate = savedSettings.baudRate
+    } else {
+      store.config.baudRate = savedSettings.baudRate || store.config.baudRate
+    }
+    store.config.dataBits = savedSettings.dataBits || store.config.dataBits
+    store.config.stopBits = savedSettings.stopBits || store.config.stopBits
+    store.config.parity = savedSettings.parity || store.config.parity
+  }
+})
+
+// Watch for settings changes and save to localStorage
+watch(
+  () => ({
+    baudRate: store.config.baudRate,
+    dataBits: store.config.dataBits,
+    stopBits: store.config.stopBits,
+    parity: store.config.parity
+  }),
+  (newSettings) => {
+    localStorage.setItem('serialSettings', JSON.stringify(newSettings))
+  },
+  { deep: true }
+)
 
 watch(selectedBaudRate, (newValue) => {
   if (newValue !== 'custom') {
     store.config.baudRate = newValue
+  } else {
+    // When switching to custom mode, use the previous custom value
+    store.config.baudRate = customBaudRate.value
   }
 })
 
