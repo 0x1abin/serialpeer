@@ -20,21 +20,31 @@ export function useSerialPort() {
   async function connect(config: SerialConfig) {
     try {
       const newPort = await navigator.serial.requestPort()
-      await newPort.open({
-        baudRate: config.baudRate,
-        dataBits: config.dataBits,
-        stopBits: config.stopBits,
-        parity: config.parity
-      })
-      
-      port.value = newPort
-      isConnected.value = true
-      error.value = null
+      try {
+        await newPort.open({
+          baudRate: config.baudRate,
+          dataBits: config.dataBits,
+          stopBits: config.stopBits,
+          parity: config.parity
+        })
+        
+        port.value = newPort
+        isConnected.value = true
+        error.value = null
 
-      return port.value
+        return port.value
+      } catch (e) {
+        error.value = 'Failed to open serial port. Please check if the device is in use by another program or if the port settings are correct.'
+        console.error('Failed to open serial port:', e)
+        throw new Error('Failed to open serial port. Please check if the device is in use by another program or if the port settings are correct.')
+      }
     } catch (e) {
-      error.value = 'Failed to connect to serial port'
-      console.error(e)
+      if ((e as Error).name === 'NotFoundError') {
+        error.value = 'No serial port selected'
+      } else {
+        error.value = 'Failed to connect to serial port. Please ensure the device is properly connected.'
+      }
+      console.error('Serial connection failed:', e)
       throw e
     }
   }
