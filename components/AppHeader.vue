@@ -15,7 +15,7 @@
       >
         <Icon name="mdi:github" class="w-5 h-5" />
       </a>
-      <ColorModeButton />
+      <ThemeSelector />
       <LanguageSelector />
     </div>
   </header>

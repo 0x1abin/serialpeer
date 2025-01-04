@@ -1,17 +1,47 @@
-import type { Config } from 'tailwindcss'
-
-export default {
-  content: [],
+module.exports = {
+  content: [
+    './components/**/*.{vue,js,ts}',
+    './layouts/**/*.vue',
+    './pages/**/*.vue',
+    './plugins/**/*.{js,ts}',
+    './nuxt.config.{js,ts}',
+    './app.vue'
+  ],
   theme: {
-    extend: {},
+    extend: {}
   },
-  plugins: [require('daisyui')],
   daisyui: {
-    themes: ['light', 'dark'],
-    darkTheme: 'dark',
-    base: true,
-    styled: true,
-    utils: true,
-    logs: false,
-  },
-} satisfies Config
+    themes: [
+      'light',
+      'dark',
+      'cupcake',
+      'bumblebee',
+      'emerald',
+      'corporate',
+      'synthwave',
+      'retro',
+      'cyberpunk',
+      'valentine',
+      'halloween',
+      'garden',
+      'forest',
+      'aqua',
+      'lofi',
+      'pastel',
+      'fantasy',
+      'wireframe',
+      'black',
+      'luxury',
+      'dracula',
+      'cmyk',
+      'autumn',
+      'business',
+      'acid',
+      'lemonade',
+      'night',
+      'coffee',
+      'winter'
+    ],
+    darkTheme: 'dark'
+  }
+}

@@ -1,5 +1,6 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import pkg from './package.json'
+import tailwindConfig from './tailwind.config'
 
 export default defineNuxtConfig({
   ssr: false,
@@ -111,6 +112,22 @@ export default defineNuxtConfig({
       cookieKey: 'i18n_redirected',
       redirectOn: 'root',
       fallbackLocale: 'en'
+    }
+  },
+
+  tailwindcss: {
+    config: {
+      plugins: [require('daisyui')],
+      daisyui: {
+        themes: true,
+        darkTheme: 'dark'
+      }
+    }
+  },
+
+  runtimeConfig: {
+    public: {
+      themes: tailwindConfig.daisyui.themes
     }
   }
 })
