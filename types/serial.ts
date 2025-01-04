@@ -1,3 +1,6 @@
+/**
+ * Serial port configuration interface
+ */
 export interface SerialConfig {
   portId: string;
   baudRate: number;
@@ -6,6 +9,9 @@ export interface SerialConfig {
   parity: 'none' | 'even' | 'odd';
 }
 
+/**
+ * Serial message interface
+ */
 export interface SerialMessage {
   id: string;
   timestamp: number;
@@ -14,6 +20,9 @@ export interface SerialMessage {
   format: 'HEX' | 'ASCII';
 }
 
+/**
+ * Quick command interface
+ */
 export interface QuickCommand {
   id: string;
   name: string;
@@ -22,20 +31,29 @@ export interface QuickCommand {
   addNewline: boolean;
 }
 
+/**
+ * Log configuration interface
+ */
 export interface LogConfig {
   maxSize: number;
   autoScroll: boolean;
   showTimestamp: boolean;
 }
 
+/**
+ * Send configuration interface
+ */
 export interface SendConfig {
   autoNewline: boolean;
 }
 
+/**
+ * Timed command interface
+ */
 export interface TimedCommand {
   id: string;
-  quickCommandId: string; // 关联的 QuickCommand 的 id
-  interval: number; // 间隔时间(毫秒)
-  isLoop: boolean; // 是否循环发送
-  isActive: boolean; // 是否正在运行
+  quickCommandId: string; // Associated QuickCommand ID
+  interval: number;       // Interval in milliseconds
+  isLoop: boolean;        // Whether to loop the command
+  isActive: boolean;      // Whether the command is currently active
 }
