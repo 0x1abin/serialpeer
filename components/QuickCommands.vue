@@ -3,20 +3,21 @@
     <div class="card-body">
       <div class="flex flex-col gap-2 mb-4">
         <div class="flex justify-between items-center">
-          <h2 class="card-title">Quick Commands</h2>
+          <h2 class="card-title">{{ $t('quickCommands.title') }}</h2>
           <div class="flex gap-2">
             <button 
               v-if="store.quickCommands.length > 0"
               class="btn btn-ghost btn-sm btn-square"
               :class="{ 'text-error': isDeleteMode }"
               @click="isDeleteMode = !isDeleteMode"
-              title="Delete Mode"
+              :title="$t('quickCommands.deleteMode')"
             >
               <Icon name="ph:trash" class="w-5 h-5" />
             </button>
             <button 
               class="btn btn-ghost btn-sm btn-square"
               @click="openAddDialog"
+              :title="$t('quickCommands.add')"
             >
               <Icon name="ph:plus-bold" class="w-5 h-5" />
             </button>
@@ -40,6 +41,7 @@
                 v-if="isDeleteMode"
                 class="btn btn-sm btn-error btn-square"
                 @click="() => store.removeQuickCommand(cmd.id)"
+                :title="$t('quickCommands.delete')"
               >
                 <Icon name="ph:trash" class="w-4 h-4" />
               </button>
@@ -47,27 +49,28 @@
                 class="btn btn-sm"
                 @click="() => sendCommand(cmd)"
                 :disabled="!store.isConnected"
+                :title="$t('quickCommands.send')"
               >
-                Send
+                {{ $t('quickCommands.send') }}
               </button>
             </div>
           </div>
         </template>
         <div v-else class="bg-base-content/5 rounded-lg py-2 text-center text-sm text-base-content/50">
-          No commands
+          {{ $t('quickCommands.noCommands') }}
         </div>
       </div>
 
       <dialog class="modal" :open="showDialog">
         <div class="modal-box">
           <h3 class="font-bold text-lg">
-            {{ isEditing ? 'Edit' : 'Add' }} Quick Command
+            {{ isEditing ? $t('quickCommands.edit') : $t('quickCommands.add') }} {{ $t('quickCommands.quickCommand') }}
           </h3>
           <QuickCommandForm v-model="commandForm" />
           <div class="modal-action">
-            <button class="btn" @click="showDialog = false">Cancel</button>
+            <button class="btn" @click="showDialog = false">{{ $t('quickCommands.cancel') }}</button>
             <button class="btn btn-primary" @click="handleSubmit">
-              {{ isEditing ? 'Save' : 'Add' }}
+              {{ isEditing ? $t('quickCommands.save') : $t('quickCommands.add') }}
             </button>
           </div>
         </div>

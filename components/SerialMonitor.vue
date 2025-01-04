@@ -2,17 +2,18 @@
   <div class="card bg-base-200" :class="{ 'fixed inset-0 z-50': isMaximized }">
     <div class="card-body p-4">
       <div class="flex justify-between items-center mb-2">
-        <h2 class="card-title">Serial Monitor</h2>
+        <h2 class="card-title">{{ $t('serialMonitor.title') }}</h2>
         <div class="space-x-2 flex items-center">
           <button class="btn btn-sm" @click="clearTerminal">
-            Clear
+            {{ $t('serialMonitor.clear') }}
           </button>
           <button class="btn btn-sm" @click="exportLogs">
-            Export
+            {{ $t('serialMonitor.export') }}
           </button>
           <button 
             class="btn btn-sm btn-ghost" 
             @click="toggleMaximize"
+            :title="isMaximized ? $t('serialMonitor.minimize') : $t('serialMonitor.maximize')"
           >
             <Icon 
               :name="isMaximized ? 'ph:corners-in' : 'ph:corners-out'" 

@@ -3,20 +3,21 @@
     <div class="card-body">
       <div class="flex flex-col gap-2 mb-4">
         <div class="flex justify-between items-center">
-          <h2 class="card-title">Timed Commands</h2>
+          <h2 class="card-title">{{ $t('timedCommands.title') }}</h2>
           <div class="flex gap-2">
             <button 
               v-if="store.timedCommands.length > 0"
               class="btn btn-ghost btn-sm btn-square"
               :class="{ 'text-error': isDeleteMode }"
               @click="isDeleteMode = !isDeleteMode"
-              title="Delete Mode"
+              :title="$t('timedCommands.deleteMode')"
             >
               <Icon name="ph:trash" class="w-5 h-5" />
             </button>
             <button 
               class="btn btn-ghost btn-sm btn-square"
               @click="openAddDialog"
+              :title="$t('timedCommands.add')"
             >
               <Icon name="ph:plus-bold" class="w-5 h-5" />
             </button>
@@ -36,7 +37,7 @@
                 {{ getQuickCommandName(cmd.quickCommandId) }}
               </div>
               <div class="text-sm opacity-70">
-                {{ cmd.interval }}ms | {{ cmd.isLoop ? 'Loop' : 'Once' }}
+                {{ cmd.interval }}ms | {{ cmd.isLoop ? $t('timedCommands.loop') : $t('timedCommands.once') }}
               </div>
             </div>
             <div class="flex gap-2">
@@ -44,6 +45,7 @@
                 v-if="isDeleteMode"
                 class="btn btn-sm btn-error btn-square"
                 @click="() => store.removeTimedCommand(cmd.id)"
+                :title="$t('timedCommands.delete')"
               >
                 <Icon name="ph:trash" class="w-4 h-4" />
               </button>
@@ -53,30 +55,30 @@
                 @click="() => toggleCommand(cmd)"
                 :disabled="!store.isConnected"
               >
-                {{ cmd.isActive ? 'Stop' : 'Start' }}
+                {{ cmd.isActive ? $t('timedCommands.stop') : $t('timedCommands.start') }}
               </button>
             </div>
           </div>
         </template>
         <div v-else class="bg-base-content/5 rounded-lg py-2 text-center text-sm text-base-content/50">
-          No timed commands
+          {{ $t('timedCommands.noCommands') }}
         </div>
       </div>
 
       <dialog class="modal" :open="showDialog">
         <div class="modal-box">
           <h3 class="font-bold text-lg">
-            {{ isEditing ? 'Edit' : 'Add' }} Timed Command
+            {{ isEditing ? $t('timedCommands.edit') : $t('timedCommands.add') }}
           </h3>
           <TimedCommandForm v-model="commandForm" />
           <div class="modal-action">
-            <button class="btn" @click="showDialog = false">Cancel</button>
+            <button class="btn" @click="showDialog = false">{{ $t('common.cancel') }}</button>
             <button 
               class="btn btn-primary" 
               @click="handleSubmit"
               :disabled="!commandForm.quickCommandId || !commandForm.interval"
             >
-              {{ isEditing ? 'Save' : 'Add' }}
+              {{ isEditing ? $t('common.save') : $t('common.add') }}
             </button>
           </div>
         </div>

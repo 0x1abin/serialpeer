@@ -1,9 +1,9 @@
 <template>
   <div class="py-4 space-y-4">
     <div class="form-control">
-      <label class="label">Quick Command</label>
+      <label class="label">{{ $t('timedCommands.form.quickCommand') }}</label>
       <select v-model="command.quickCommandId" class="select select-bordered">
-        <option value="" disabled>Select a command</option>
+        <option value="" disabled>{{ $t('timedCommands.form.selectCommand') }}</option>
         <option 
           v-for="cmd in store.quickCommands" 
           :key="cmd.id" 
@@ -15,7 +15,7 @@
     </div>
     
     <div class="form-control">
-      <label class="label">Interval (ms)</label>
+      <label class="label">{{ $t('timedCommands.interval') }}</label>
       <input 
         v-model.number="command.interval" 
         type="number" 
@@ -26,7 +26,7 @@
     
     <div class="form-control">
       <label class="label cursor-pointer">
-        <span class="label-text">Loop</span>
+        <span class="label-text">{{ $t('timedCommands.loop') }}</span>
         <input 
           type="checkbox" 
           class="toggle toggle-sm"

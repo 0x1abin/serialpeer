@@ -1,25 +1,25 @@
 `<template>
   <div class="card bg-base-200">
     <div class="card-body">
-      <h2 class="card-title">Send Data</h2>
+      <h2 class="card-title">{{ $t('serialSender.title') }}</h2>
       
       <textarea
         v-model="message"
         class="textarea textarea-bordered w-full"
         rows="3"
-        placeholder="Enter data to send..."
+        :placeholder="$t('serialSender.placeholder')"
         :disabled="!store.isConnected"
       ></textarea>
 
       <div class="flex flex-wrap gap-4 justify-between items-center mt-4">
         <div class="flex items-center gap-4">
           <select v-model="format" class="select select-bordered">
-            <option value="ASCII">ASCII</option>
-            <option value="HEX">HEX</option>
+            <option value="ASCII">{{ $t('serialSender.format.ascii') }}</option>
+            <option value="HEX">{{ $t('serialSender.format.hex') }}</option>
           </select>
 
           <label class="label cursor-pointer space-x-2">
-            <span class="label-text">Auto Newline</span>
+            <span class="label-text">{{ $t('serialSender.autoNewline') }}</span>
             <input 
               type="checkbox" 
               class="toggle toggle-sm"
@@ -33,7 +33,7 @@
           :disabled="!store.isConnected || !message"
           @click="sendMessage"
         >
-          Send
+          {{ $t('serialSender.send') }}
         </button>
       </div>
     </div>

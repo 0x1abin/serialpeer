@@ -8,7 +8,8 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@pinia/nuxt',
     'nuxt-icon',
-    '@vite-pwa/nuxt'
+    '@vite-pwa/nuxt',
+    '@nuxtjs/i18n'
   ],
 
   colorMode: {
@@ -83,6 +84,33 @@ export default defineNuxtConfig({
   vite: {
     define: {
       'import.meta.env.VITE_APP_VERSION': JSON.stringify(pkg.version)
+    }
+  },
+
+  i18n: {
+    langDir: 'locales',
+    lazy: true,
+    strategy: 'no_prefix',
+    locales: [
+      {
+        code: 'en',
+        file: 'en.json',
+        name: 'English',
+        iso: 'en-US'
+      },
+      {
+        code: 'zh',
+        file: 'zh.json',
+        name: '中文',
+        iso: 'zh-CN'
+      },
+    ],
+    defaultLocale: 'en',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root',
+      fallbackLocale: 'en'
     }
   }
 })

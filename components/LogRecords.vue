@@ -4,7 +4,7 @@ import { serialDB } from '~/utils/db'
 import { useSerialStore } from '~/stores/serial'
 
 const store = useSerialStore()
-
+const { t, locale } = useI18n()
 
 const logFiles = ref<Awaited<ReturnType<typeof serialDB.getLogFiles>>>([])
 const updateInterval = ref<NodeJS.Timeout>()
@@ -30,11 +30,21 @@ function formatTimestamp(timestamp: number): string {
   const now = Date.now()
   const diff = now - timestamp
   
-  if (diff < 60000) return '刚刚'
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)}小时前`
+  if (diff < 60000) {
+    return t('logRecords.timeFormat.justNow')
+  }
   
-  return new Date(timestamp).toLocaleString()
+  if (diff < 3600000) {
+    const minutes = Math.floor(diff / 60000)
+    return t('logRecords.timeFormat.minutesAgo', { n: minutes })
+  }
+  
+  if (diff < 86400000) {
+    const hours = Math.floor(diff / 3600000)
+    return t('logRecords.timeFormat.hoursAgo', { n: hours })
+  }
+  
+  return new Date(timestamp).toLocaleString(locale.value)
 }
 
 function formatDisplayName(timestamp: number): string {
@@ -82,14 +92,14 @@ defineExpose({
   <div class="card bg-base-200">
     <div class="card-body p-4">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="card-title">Log Records</h2>
+        <h2 class="card-title">{{ $t('logRecords.title') }}</h2>
         <div class="flex gap-2">
           <button 
             v-if="sortedLogFiles.length > 0"
             class="btn btn-ghost btn-sm btn-square"
             :class="{ 'text-error': isDeleteMode }"
             @click="isDeleteMode = !isDeleteMode"
-            title="Delete Mode"
+            :title="$t('logRecords.deleteMode')"
           >
             <Icon name="ph:trash" class="w-5 h-5" />
           </button>
@@ -101,7 +111,9 @@ defineExpose({
             }"
             @click="toggleLogging"
             :disabled="!store.isConnected"
-            :title="store.isLogRecording ? 'Stop Recording' : 'Start Recording'"
+            :title="store.isLogRecording ? 
+              $t('logRecords.stopRecording') : 
+              $t('logRecords.startRecording')"
           >
             <Icon 
               :name="store.isLogRecording ? 'ph:stop-circle' : 'ph:plus-bold'" 
@@ -121,9 +133,9 @@ defineExpose({
             <div class="flex-1 min-w-0">
               <div class="font-medium whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-2">
                 <div 
-                  v-if="store.isLogRecording && file.id === Math.max(...sortedLogFiles.map(f => f.id!))"
+                  v-if="store.isLogRecording && file.id === Math.max(...sortedLogFiles.map((f: { id: number }) => f.id!))"
                   class="w-2 h-2 rounded-full bg-error animate-pulse"
-                  title="Recording"
+                  :title="$t('logRecords.recording')"
                 />
                 {{ formatDisplayName(file.createdAt) }}
               </div>
@@ -138,14 +150,14 @@ defineExpose({
                 v-if="isDeleteMode"
                 class="btn btn-sm btn-error btn-square"
                 @click="deleteLog(file.id!)"
-                title="Delete"
+                :title="$t('logRecords.delete')"
               >
                 <Icon name="ph:trash" class="w-4 h-4" />
               </button>
               <button 
                 class="btn btn-sm btn-square"
                 @click="downloadLog(file)"
-                title="Download"
+                :title="$t('logRecords.download')"
               >
                 <Icon name="ph:download" class="w-4 h-4" />
               </button>
@@ -153,7 +165,7 @@ defineExpose({
           </div>
         </template>
         <div v-else class="bg-base-content/5 rounded-lg py-2 text-center text-sm text-base-content/50">
-          No log files
+          {{ $t('logRecords.noLogs') }}
         </div>
       </div>
     </div>

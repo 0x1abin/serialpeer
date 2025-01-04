@@ -1,0 +1,94 @@
+{
+  "serialMonitor": {
+    "title": "Serial Monitor",
+    "clear": "Clear",
+    "export": "Export",
+    "maximize": "Maximize",
+    "minimize": "Minimize"
+  },
+  "serialConnect": {
+    "title": "Connection Settings",
+    "baudRate": "Baud Rate",
+    "customBaudRate": "Custom Baud Rate",
+    "dataBits": "Data Bits",
+    "stopBits": "Stop Bits",
+    "parity": "Parity",
+    "parityOptions": {
+      "none": "None",
+      "even": "Even",
+      "odd": "Odd"
+    },
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "connectionError": "Connection failed"
+  },
+  "serialSender": {
+    "title": "Send Data",
+    "placeholder": "Enter data to send...",
+    "format": {
+      "ascii": "ASCII",
+      "hex": "HEX"
+    },
+    "autoNewline": "Auto Newline",
+    "send": "Send"
+  },
+  "quickCommands": {
+    "title": "Quick Commands",
+    "noCommands": "No commands",
+    "add": "Add Command",
+    "edit": "Edit Command",
+    "delete": "Delete",
+    "deleteMode": "Delete Mode",
+    "send": "Send",
+    "quickCommand": "Quick Command",
+    "cancel": "Cancel",
+    "form": {
+      "name": "Name",
+      "command": "Command",
+      "format": "Format",
+      "addNewline": "Add Newline"
+    }
+  },
+  "timedCommands": {
+    "title": "Timed Commands",
+    "noCommands": "No commands",
+    "add": "Add Command",
+    "edit": "Edit Command",
+    "deleteMode": "Delete Mode",
+    "interval": "Interval (ms)",
+    "loop": "Loop",
+    "once": "Once",
+    "start": "Start",
+    "stop": "Stop",
+    "form": {
+      "quickCommand": "Quick Command",
+      "selectCommand": "Select a command"
+    }
+  },
+  "logRecords": {
+    "title": "Log Records",
+    "noLogs": "No log files",
+    "recording": "Recording",
+    "startRecording": "Start Recording",
+    "stopRecording": "Stop Recording",
+    "deleteMode": "Delete Mode",
+    "download": "Download",
+    "delete": "Delete",
+    "timeFormat": {
+      "justNow": "Just now",
+      "minutesAgo": "{n} minutes ago",
+      "hoursAgo": "{n} hours ago"
+    }
+  },
+  "header": {
+    "viewOnGithub": "View on GitHub"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "unknown": "Unknown"
+  }
+}

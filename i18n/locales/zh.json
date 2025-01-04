@@ -1,0 +1,94 @@
+{
+  "serialMonitor": {
+    "title": "串口监视器",
+    "clear": "清除",
+    "export": "导出",
+    "maximize": "最大化",
+    "minimize": "最小化"
+  },
+  "serialConnect": {
+    "title": "连接设置",
+    "baudRate": "波特率",
+    "customBaudRate": "自定义波特率",
+    "dataBits": "数据位",
+    "stopBits": "停止位",
+    "parity": "校验位",
+    "parityOptions": {
+      "none": "无",
+      "even": "偶校验",
+      "odd": "奇校验"
+    },
+    "connect": "连接",
+    "disconnect": "断开连接",
+    "connectionError": "连接失败"
+  },
+  "serialSender": {
+    "title": "发送数据",
+    "placeholder": "输入要发送的数据...",
+    "format": {
+      "ascii": "ASCII",
+      "hex": "HEX"
+    },
+    "autoNewline": "自动换行",
+    "send": "发送"
+  },
+  "quickCommands": {
+    "title": "快捷命令",
+    "noCommands": "暂无命令",
+    "add": "添加命令",
+    "edit": "编辑命令",
+    "delete": "删除模式",
+    "deleteMode": "删除模式",
+    "send": "发送",
+    "quickCommand": "快捷命令",
+    "cancel": "取消",
+    "form": {
+      "name": "名称",
+      "command": "命令",
+      "format": "格式",
+      "addNewline": "添加换行"
+    }
+  },
+  "timedCommands": {
+    "title": "定时命令",
+    "noCommands": "暂无命令",
+    "add": "添加命令",
+    "edit": "编辑命令",
+    "deleteMode": "删除模式",
+    "interval": "间隔 (毫秒)",
+    "loop": "循环",
+    "once": "单次",
+    "start": "开始",
+    "stop": "停止",
+    "form": {
+      "quickCommand": "快捷命令",
+      "selectCommand": "选择命令"
+    }
+  },
+  "logRecords": {
+    "title": "日志记录",
+    "noLogs": "暂无日志文件",
+    "recording": "记录中",
+    "startRecording": "开始记录",
+    "stopRecording": "停止记录",
+    "deleteMode": "删除模式",
+    "download": "下载",
+    "delete": "删除",
+    "timeFormat": {
+      "justNow": "刚刚",
+      "minutesAgo": "{n}分钟前",
+      "hoursAgo": "{n}小时前"
+    }
+  },
+  "header": {
+    "viewOnGithub": "在 GitHub 上查看"
+  },
+  "common": {
+    "cancel": "取消",
+    "save": "保存",
+    "add": "添加",
+    "edit": "编辑",
+    "delete": "删除",
+    "unknown": "未知"
+  }
+} 

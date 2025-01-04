@@ -1,7 +1,7 @@
 <template>
   <div class="py-4 space-y-4">
     <div class="form-control">
-      <label class="label">Name</label>
+      <label class="label">{{ $t('quickCommands.form.name') }}</label>
       <input 
         v-model="command.name" 
         type="text" 
@@ -10,7 +10,7 @@
     </div>
     
     <div class="form-control">
-      <label class="label">Command</label>
+      <label class="label">{{ $t('quickCommands.form.command') }}</label>
       <input 
         v-model="command.command" 
         type="text" 
@@ -19,7 +19,7 @@
     </div>
     
     <div class="form-control">
-      <label class="label">Format</label>
+      <label class="label">{{ $t('quickCommands.form.format') }}</label>
       <select v-model="command.format" class="select select-bordered">
         <option value="ASCII">ASCII</option>
         <option value="HEX">HEX</option>
@@ -28,7 +28,7 @@
     
     <div class="form-control">
       <label class="label cursor-pointer">
-        <span class="label-text">Add Newline</span>
+        <span class="label-text">{{ $t('quickCommands.form.addNewline') }}</span>
         <input 
           type="checkbox" 
           class="toggle toggle-sm"
