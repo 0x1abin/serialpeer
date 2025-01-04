@@ -5,6 +5,9 @@
     "typeRoots": [
       "./types",
       "./node_modules/@types"
+    ],
+    "types": [
+      "@vite-pwa/nuxt"
     ]
   }
 }

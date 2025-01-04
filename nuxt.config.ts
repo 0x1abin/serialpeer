@@ -4,7 +4,8 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
     '@pinia/nuxt',
-    'nuxt-icon'
+    'nuxt-icon',
+    '@vite-pwa/nuxt'
   ],
 
   colorMode: {
@@ -33,5 +34,46 @@ export default defineNuxtConfig({
 
   build: {
     transpile: ['idb']
+  },
+
+  pwa: {
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'SerialPeer',
+      short_name: 'SerialPeer',
+      description: 'SerialPeer - Modern Web Serial Debug Tool with P2P Sharing',
+      theme_color: '#ffffff',
+      icons: [
+        {
+          src: '/pwa-192x192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: '/pwa-512x512.png',
+          sizes: '512x512',
+          type: 'image/png'
+        },
+        {
+          src: '/pwa-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'any maskable'
+        }
+      ]
+    },
+    workbox: {
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}']
+    },
+    client: {
+      installPrompt: true,
+      periodicSyncForUpdates: 3600
+    },
+    devOptions: {
+      enabled: true,
+      suppressWarnings: true,
+      navigateFallback: '/',
+      type: 'module'
+    }
   }
 })

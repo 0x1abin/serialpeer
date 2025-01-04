@@ -4,10 +4,13 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
+    "build-sw": "SW=true nuxi build",
     "dev": "nuxt dev",
+    "dev-sw": "SW=true nuxi dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "generate-icons": "node scripts/generate-pwa-icons.js"
   },
   "dependencies": {
     "@nuxtjs/color-mode": "^3.3.2",
@@ -25,6 +28,8 @@
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.7",
+    "@vite-pwa/nuxt": "^0.10.6",
+    "sharp": "^0.33.5",
     "typescript": "^5.4.2"
   }
 }
