@@ -1,3 +1,6 @@
+import { defineNuxtConfig } from 'nuxt/config'
+import pkg from './package.json'
+
 export default defineNuxtConfig({
   ssr: false,
   modules: [
@@ -74,6 +77,12 @@ export default defineNuxtConfig({
       suppressWarnings: true,
       navigateFallback: '/',
       type: 'module'
+    }
+  },
+
+  vite: {
+    define: {
+      'import.meta.env.VITE_APP_VERSION': JSON.stringify(pkg.version)
     }
   }
 })
