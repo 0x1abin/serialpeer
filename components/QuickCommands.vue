@@ -68,9 +68,9 @@
           </h3>
           <QuickCommandForm v-model="commandForm" />
           <div class="modal-action">
-            <button class="btn" @click="showDialog = false">{{ $t('quickCommands.cancel') }}</button>
+            <button class="btn" @click="showDialog = false">{{ $t('common.cancel') }}</button>
             <button class="btn btn-primary" @click="handleSubmit">
-              {{ isEditing ? $t('quickCommands.save') : $t('quickCommands.add') }}
+              {{ isEditing ? $t('common.save') : $t('common.add') }}
             </button>
           </div>
         </div>
