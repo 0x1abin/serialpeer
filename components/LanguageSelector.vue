@@ -2,7 +2,6 @@
   <div class="dropdown dropdown-end dropdown-hover">
     <div role="button" class="btn btn-ghost btn-sm gap-1 normal-case">
       <Icon name="heroicons:language-solid" class="w-5 h-5" />
-      <Icon name="heroicons:chevron-down" class="w-5 h-5 opacity-50" />
     </div>
     <ul class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-200 rounded-box w-30">
       <li>
