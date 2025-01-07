@@ -1,7 +1,7 @@
-import { Terminal } from 'xterm'
-import { FitAddon } from 'xterm-addon-fit'
-import { WebLinksAddon } from 'xterm-addon-web-links'
-import type { ITerminalOptions } from 'xterm'
+import { Terminal } from '@xterm/xterm'
+import { FitAddon } from '@xterm/addon-fit'
+import { WebLinksAddon } from '@xterm/addon-web-links'
+import type { ITerminalOptions } from '@xterm/xterm'
 
 interface TerminalConfig extends ITerminalOptions {
   scrollback?: number

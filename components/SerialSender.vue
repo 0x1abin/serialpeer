@@ -52,7 +52,7 @@ async function sendMessage() {
   try {
     let dataToSend = message.value
     if (autoNewline.value && format.value === 'ASCII') {
-      dataToSend += '\n'
+      dataToSend += '\r\n'
     }
     await store.sendData(dataToSend, format.value)
     message.value = ''

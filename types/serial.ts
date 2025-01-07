@@ -17,7 +17,7 @@ export interface SerialMessage {
   timestamp: number;
   data: string;
   direction: 'received' | 'sent';
-  format: 'HEX' | 'ASCII';
+  format: 'HEX' | 'ASCII' | 'RAW';
 }
 
 /**

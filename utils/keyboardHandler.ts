@@ -1,4 +1,4 @@
-import type { ITerminalEvent } from 'xterm'
+import type { ITerminalEvent } from '@xterm/xterm'
 import type { SerialStore } from '~/stores/serial'
 
 export async function handleKeyboardEvent(
@@ -60,7 +60,7 @@ async function handleRegularKey(
   }
 
   if (keyCode in specialKeyMap) {
-    await store.sendData(specialKeyMap[keyCode], 'ASCII')
+    await store.sendData(new Uint8Array([keyCode]), 'RAW')
   } else {
     await store.sendData(key, 'ASCII')
   }

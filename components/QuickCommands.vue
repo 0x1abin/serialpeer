@@ -137,7 +137,7 @@ function handleSubmit() {
 function sendCommand(cmd: QuickCommand) {
   let dataToSend = cmd.command
   if (cmd.addNewline && cmd.format === 'ASCII') {
-    dataToSend += '\n'
+    dataToSend += '\r\n'
   }
   store.sendData(dataToSend, cmd.format)
 }

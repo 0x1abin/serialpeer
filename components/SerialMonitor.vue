@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { saveAs } from 'file-saver'
-import 'xterm/css/xterm.css'
+import '@xterm/xterm/css/xterm.css'
 import { useTerminal } from '~/composables/useTerminal'
 import { handleKeyboardEvent } from '~/utils/keyboardHandler'
 

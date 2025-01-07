@@ -175,37 +175,18 @@ export function useSerialData() {
    * @param data - Data to send
    * @param format - Data format ('ASCII' or 'HEX')
    */
-  async function sendData(data: string, format: 'ASCII' | 'HEX' = 'ASCII') {
+  async function sendData(data: Uint8Array | string, format: 'ASCII' | 'HEX' | 'RAW' = 'ASCII') {
     if (!writer.value) return
 
     try {
-      let bytes: Uint8Array
-
-      if (format === 'HEX') {
-        bytes = new Uint8Array(data.split(' ').map(x => parseInt(x, 16)))
-      } else {
-        bytes = new TextEncoder().encode(data)
-      }
-
-      await writer.value.write(bytes)
-
-      const message: SerialMessage = {
-        id: crypto.randomUUID(),
-        timestamp: Date.now(),
-        data,
-        direction: 'sent',
-        format,
-      }
-      messages.value.push(message)
-
-      // Also log sent data
-      if (currentLogId.value) {
-        messageBuffer.value.push(`[Sent ${format}] ${data}`)
-        if (messageBuffer.value.length >= 30) {
-          await saveBufferToDb()
-        } else {
-          scheduleBufferSave()
-        }
+      if (format === 'RAW') {
+        return await writer.value.write(data)
+      } else if (format === 'ASCII' && typeof data === 'string') {
+        const bytes = new TextEncoder().encode(data)
+        return await writer.value.write(bytes)
+      } else if (format === 'HEX' && typeof data === 'string') {
+        const bytes = new Uint8Array(data.split(' ').map(x => parseInt(x, 16)))
+        return await writer.value.write(bytes)
       }
     } catch (error) {
       console.error('Failed to send data:', error)
