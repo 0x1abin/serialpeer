@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TimedCommand } from '~/types/serial'
+import type { TimedCommand } from '~/composables/interface'
 import { useSerialStore } from '~/stores/serial'
 
 const store = useSerialStore()

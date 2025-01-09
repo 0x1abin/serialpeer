@@ -1,5 +1,12 @@
-import { ref } from 'vue'
-import type { SerialConfig } from '~/types/serial'
+import type { SerialPort, SerialPortInfo } from 'serialport'
+
+export interface SerialConfig {
+  portId: string;
+  baudRate: number;
+  dataBits: 7 | 8;
+  stopBits: 1 | 2;
+  parity: 'none' | 'even' | 'odd';
+}
 
 export function useSerialPort() {
   const port = ref<SerialPort | null>(null)

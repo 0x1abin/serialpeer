@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import type { QuickCommand } from '~/types/serial'
+import type { QuickCommand } from '~/composables/interface'
 
 const props = defineProps<{
   modelValue: Omit<QuickCommand, 'id'>

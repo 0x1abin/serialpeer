@@ -1,6 +1,13 @@
 import { defineStore } from 'pinia'
-import { ref, watch } from 'vue'
-import type { SerialConfig, QuickCommand, LogConfig, TimedCommand } from '~/types/serial'
+import { useSerialPort } from '~/composables/useSerialPort'
+import type { SerialConfig } from '~/composables/useSerialPort'
+import type { QuickCommand, TimedCommand } from '~/composables/interface'
+
+export interface LogConfig {
+  maxSize: number;
+  autoScroll: boolean;
+  showTimestamp: boolean;
+}
 
 export const useSerialStore = defineStore('serial', () => {
   // Import composables

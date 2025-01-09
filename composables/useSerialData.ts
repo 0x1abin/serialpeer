@@ -1,6 +1,13 @@
-import { ref } from 'vue'
-import type { SerialMessage } from '~/types/serial'
 import { serialDB } from '~/utils/db'
+import type { SerialPort } from 'serialport'
+
+export interface SerialMessage {
+  id: string;
+  timestamp: number;
+  data: string;
+  direction: 'received' | 'sent';
+  format: 'HEX' | 'ASCII' | 'RAW';
+}
 
 export function useSerialData() {
   // Reactive variables
