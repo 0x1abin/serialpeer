@@ -115,16 +115,6 @@ export default defineNuxtConfig({
     }
   },
 
-  tailwindcss: {
-    config: {
-      plugins: [require('daisyui')],
-      daisyui: {
-        themes: true,
-        darkTheme: 'dark'
-      }
-    }
-  },
-
   runtimeConfig: {
     public: {
       themes: tailwindConfig.daisyui.themes

@@ -1,4 +1,7 @@
-module.exports = {
+import type { Config } from 'tailwindcss'
+
+export default {
+  plugins: [require('daisyui')],
   content: [
     './components/**/*.{vue,js,ts}',
     './layouts/**/*.vue',
