@@ -12,7 +12,6 @@ export interface LogConfig {
 export const useSerialStore = defineStore('serial', () => {
   // Import composables
   const {
-    port,
     isConnected,
     connect,
     disconnect,

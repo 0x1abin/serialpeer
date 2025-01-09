@@ -1,4 +1,3 @@
-import type { SerialPort, SerialPortInfo } from 'serialport'
 
 export interface SerialConfig {
   portId: string;
@@ -9,20 +8,9 @@ export interface SerialConfig {
 }
 
 export function useSerialPort() {
-  const port = ref<SerialPort | null>(null)
-  const availablePorts = ref<SerialPortInfo[]>([])
+  const port = ref()
   const isConnected = ref(false)
   const error = ref<string | null>(null)
-
-  async function listPorts() {
-    try {
-      const ports = await navigator.serial.getPorts()
-      availablePorts.value = ports
-    } catch (e) {
-      error.value = 'Failed to list serial ports'
-      console.error(e)
-    }
-  }
 
   async function connect(config: SerialConfig) {
     try {
@@ -72,11 +60,8 @@ export function useSerialPort() {
   }
 
   return {
-    port,
-    availablePorts,
     isConnected,
     error,
-    listPorts,
     connect,
     disconnect
   }
