@@ -1,5 +1,4 @@
 import { serialDB } from '~/utils/db'
-import type { SerialPort } from 'serialport'
 
 export interface SerialMessage {
   id: string;
@@ -79,7 +78,7 @@ export function useSerialData() {
    * Start reading data from the serial port
    * @param port - Serial port instance
    */
-  async function startReading(port: SerialPort) {
+  async function startReading(port: any) {
     try {
       partialLine = '' // Reset partial line buffer
 
