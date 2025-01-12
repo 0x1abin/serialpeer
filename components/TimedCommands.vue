@@ -70,7 +70,10 @@
           <h3 class="font-bold text-lg">
             {{ isEditing ? $t('timedCommands.edit') : $t('timedCommands.add') }}
           </h3>
-          <TimedCommandForm v-model="commandForm" />
+          <TimedCommandForm 
+            v-model="commandForm" 
+            :quick-commands="store.quickCommands"
+          />
           <div class="modal-action">
             <button class="btn" @click="showDialog = false">{{ $t('common.cancel') }}</button>
             <button 

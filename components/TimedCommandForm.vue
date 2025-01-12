@@ -5,7 +5,7 @@
       <select v-model="command.quickCommandId" class="select select-bordered">
         <option value="" disabled>{{ $t('timedCommands.form.selectCommand') }}</option>
         <option 
-          v-for="cmd in store.quickCommands" 
+          v-for="cmd in quickCommands" 
           :key="cmd.id" 
           :value="cmd.id"
         >
@@ -38,13 +38,11 @@
 </template>
 
 <script setup lang="ts">
-import type { TimedCommand } from '~/composables/interface'
-import { useSerialStore } from '~/stores/serial'
-
-const store = useSerialStore()
+import type { TimedCommand, QuickCommand } from '~/composables/interface'
 
 const props = defineProps<{
-  modelValue: Omit<TimedCommand, 'id' | 'isActive'>
+  modelValue: Omit<TimedCommand, 'id' | 'isActive'>,
+  quickCommands: QuickCommand[]
 }>()
 
 const emit = defineEmits<{
