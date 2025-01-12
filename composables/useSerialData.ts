@@ -10,12 +10,12 @@ export interface SerialMessage {
 
 export function useSerialData() {
   // Reactive variables
-  const messages = ref<SerialMessage[]>([])
   const reader = ref<ReadableStreamDefaultReader | null>(null)
   const writer = ref<WritableStreamDefaultWriter | null>(null)
   const messageBuffer = ref<string[]>([])
   const currentLogId = ref<number | null>(null)
   const isLogRecording = ref(false)
+  const onData = ref<((data: string) => void) | null>(null)
 
   let saveTimeout: NodeJS.Timeout | null = null
   let partialLine = ''
@@ -110,14 +110,7 @@ export function useSerialData() {
 
         if (value) {
           const decodedData = new TextDecoder().decode(value)
-          const message: SerialMessage = {
-            id: crypto.randomUUID(),
-            timestamp: Date.now(),
-            data: decodedData,
-            direction: 'received',
-            format: 'ASCII',
-          }
-          messages.value.push(message)
+          onData.value?.(decodedData)
 
           // Process and buffer received lines
           const lines = processReceivedData(decodedData)
@@ -201,13 +194,6 @@ export function useSerialData() {
   }
 
   /**
-   * Clear all messages
-   */
-  function clearMessages() {
-    messages.value = []
-  }
-
-  /**
    * Start log recording
    */
   async function startLogRecording() {
@@ -241,13 +227,12 @@ export function useSerialData() {
   }
 
   return {
-    messages,
     startReading,
     stopReading,
     sendData,
-    clearMessages,
     startLogRecording,
     stopLogRecording,
     isLogRecording,
+    onData,
   }
 }

@@ -62,22 +62,18 @@ onMounted(() => {
   terminal.value?.onData(handlePasteData)
   
   window.addEventListener('resize', handleResize)
+
+  store.addEventListener('data', (event) => {
+    if (event?.data) {
+      terminal.value?.write(event.data)
+    }
+  })
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
   dispose()
 })
-
-// 监听串口消息
-watch(() => store.messages, (messages) => {
-  const lastMessage = messages[messages.length - 1]
-  if (!lastMessage || !terminal.value) return
-
-  if (lastMessage.direction === 'received') {
-    terminal.value.write(lastMessage.data)
-  }
-}, { deep: true })
 
 function handlePasteData(data: string) {
   if (!store.isConnected) return
@@ -88,14 +84,23 @@ function handlePasteData(data: string) {
 
 function clearTerminal() {
   terminal.value?.clear()
-  store.clearMessages()
 }
 
 function exportLogs() {
-  const content = store.messages
-    .map(msg => msg.data)
-    .join('')
-    .replace(/\[\d+(?:;\d+)*m/g, '') // 移除颜色标签
+  if (!terminal.value) return
+  
+  const buffer = terminal.value.buffer.active
+  const lineCount = buffer.length
+  const lines: string[] = []
+  
+  for (let i = 0; i < lineCount; i++) {
+    const line = buffer.getLine(i)
+    if (line) {
+      lines.push(line.translateToString())
+    }
+  }
+  
+  const content = lines.join('\n').replace(/\[\d+(?:;\d+)*m/g, '') // remove color tags
   const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
   saveAs(blob, `serial-logs-${new Date().toISOString()}.txt`)
 }

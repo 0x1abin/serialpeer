@@ -19,3 +19,11 @@ export interface TimedCommand {
   isLoop: boolean;        // Whether to loop the command
   isActive: boolean;      // Whether the command is currently active
 }
+
+/**
+ * Serial event interface
+ */
+export interface SerialEvent {
+  key: string;
+  data: any;
+}

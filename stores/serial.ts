@@ -10,21 +10,22 @@ export interface LogConfig {
 }
 
 export const useSerialStore = defineStore('serial', () => {
-  // Import composables
+  const eventListeners = ref<{ [key: string]: ((event: SerialEvent) => void)[] }>({})
+
   const {
     isConnected,
     connect,
-    disconnect,
+    disconnect
   } = useSerialPort()
+
   const {
-    messages,
     startReading,
     stopReading,
     sendData,
-    clearMessages,
     isLogRecording,
     startLogRecording,
     stopLogRecording,
+    onData,
   } = useSerialData()
 
   // Reactive state
@@ -93,6 +94,7 @@ export const useSerialStore = defineStore('serial', () => {
       if (!serialPort) {
         throw new Error('Failed to connect to serial port')
       }
+      triggerEvent('connect', { port: serialPort })
       await startReading(serialPort)
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Connection failed'
@@ -114,6 +116,7 @@ export const useSerialStore = defineStore('serial', () => {
       stopAllTimedCommands()
       await stopReading()
       await disconnect()
+      triggerEvent('disconnect', null)
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Disconnection failed'
       throw err
@@ -221,16 +224,36 @@ export const useSerialStore = defineStore('serial', () => {
     }
   }
 
+  function addEventListener(event: string, callback: (e: SerialEvent) => void) {
+    if (!eventListeners.value[event]) {
+      eventListeners.value[event] = []
+    }
+    eventListeners.value[event].push(callback)
+  }
+
+  function removeEventListener(event: string, callback: (e: SerialEvent) => void) {
+    if (eventListeners.value[event]) {
+      eventListeners.value[event] = eventListeners.value[event].filter(cb => cb !== callback)
+    }
+  }
+
+  function triggerEvent(event: string, data: any) {
+    eventListeners.value[event]?.forEach(listener => listener({ key: event, data }))
+  }
+
+  onData.value = (data: string) => {
+    triggerEvent('data', data)
+  }
+
   return {
     config,
     logConfig,
     quickCommands,
     isConnected,
-    messages,
+    onData,
     connect: handleConnect,
     disconnect: handleDisconnect,
     sendData,
-    clearMessages,
     addQuickCommand,
     removeQuickCommand,
     updateQuickCommand,
@@ -244,5 +267,7 @@ export const useSerialStore = defineStore('serial', () => {
     isLogRecording,
     startLogRecording,
     stopLogRecording,
+    addEventListener,
+    removeEventListener
   }
 })
