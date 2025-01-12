@@ -69,8 +69,9 @@ function formatTimestamp(timestamp: number): string {
     const hours = Math.floor(diff / 3600000)
     return t('logRecords.timeFormat.hoursAgo', { n: hours })
   }
-  
-  return new Date(timestamp).toLocaleString(locale.value)
+
+  const days = Math.floor(diff / 86400000)
+  return t('logRecords.timeFormat.daysAgo', { n: days })
 }
 
 /**
