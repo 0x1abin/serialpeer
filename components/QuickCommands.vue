@@ -47,7 +47,7 @@
               </button>
               <button 
                 class="btn btn-sm"
-                @click="() => sendCommand(cmd)"
+                @click="() => store.sendQuickCommand(cmd)"
                 :disabled="!store.isConnected"
                 :title="$t('quickCommands.send')"
               >
@@ -132,13 +132,5 @@ function handleSubmit() {
     })
   }
   showDialog.value = false
-}
-
-function sendCommand(cmd: QuickCommand) {
-  let dataToSend = cmd.command
-  if (cmd.addNewline && cmd.format === 'ASCII') {
-    dataToSend += '\r\n'
-  }
-  store.sendData(dataToSend, cmd.format)
 }
 </script>

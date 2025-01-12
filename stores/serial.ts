@@ -4,6 +4,7 @@ import type { SerialConfig } from '~/composables/useSerialPort'
 import type { QuickCommand, TimedCommand } from '~/composables/interface'
 import { useSerialData } from '~/composables/useSerialData'
 import { useLogRecord } from '~/composables/useLogRecord'
+import { useCommand } from '~/composables/useCommand'
 
 export interface LogConfig {
   maxSize: number;
@@ -33,6 +34,21 @@ export const useSerialStore = defineStore('serial', () => {
     stopLogRecording,
   } = useLogRecord()
 
+  const {
+    quickCommands,
+    timedCommands,
+    addQuickCommand,
+    removeQuickCommand,
+    updateQuickCommand,
+    sendQuickCommand,
+    addTimedCommand,
+    removeTimedCommand,
+    startTimedCommand,
+    stopTimedCommand,
+    updateTimedCommand,
+    stopAllTimedCommands
+  } = useCommand()
+
   // Reactive state
   const config = ref<SerialConfig>({
     portId: '',
@@ -56,35 +72,7 @@ export const useSerialStore = defineStore('serial', () => {
     }
   )
 
-  const quickCommands = ref<QuickCommand[]>(
-    JSON.parse(localStorage.getItem('serialQuickCommands') || '[]')
-  )
-
-  // Watch quickCommands changes and save to localStorage
-  watch(
-    () => quickCommands.value,
-    (newCommands) => {
-      localStorage.setItem('serialQuickCommands', JSON.stringify(newCommands))
-    },
-    { deep: true }
-  )
-
   const error = ref<string | null>(null)
-
-  const timedCommands = ref<TimedCommand[]>(
-    JSON.parse(localStorage.getItem('serialTimedCommands') || '[]')
-  )
-
-  const timerIds = new Map<string, NodeJS.Timeout>()
-
-  // Watch timedCommands changes and save to localStorage
-  watch(
-    () => timedCommands.value,
-    (newCommands) => {
-      localStorage.setItem('serialTimedCommands', JSON.stringify(newCommands))
-    },
-    { deep: true }
-  )
 
   /**
    * Handle serial port connection
@@ -92,7 +80,7 @@ export const useSerialStore = defineStore('serial', () => {
   async function handleConnect() {
     error.value = null
     try {
-      // Stop all timed commands
+      // 停止所有定时命令
       stopAllTimedCommands()
 
       const serialPort = await connect(config.value)
@@ -128,107 +116,6 @@ export const useSerialStore = defineStore('serial', () => {
     }
   }
 
-  /**
-   * Stop all timed commands
-   */
-  function stopAllTimedCommands() {
-    timedCommands.value.forEach((cmd) => {
-      if (cmd.isActive) {
-        stopTimedCommand(cmd.id)
-      }
-      cmd.isActive = false
-    })
-  }
-
-  /**
-   * Quick command operations
-   */
-  function addQuickCommand(command: QuickCommand) {
-    quickCommands.value.push(command)
-  }
-
-  function removeQuickCommand(id: string) {
-    quickCommands.value = quickCommands.value.filter((cmd) => cmd.id !== id)
-  }
-
-  function updateQuickCommand(command: QuickCommand) {
-    const index = quickCommands.value.findIndex((cmd) => cmd.id === command.id)
-    if (index !== -1) {
-      quickCommands.value[index] = command
-    }
-  }
-
-  /**
-   * Timed command operations
-   */
-  function addTimedCommand(command: TimedCommand) {
-    timedCommands.value.push(command)
-  }
-
-  function removeTimedCommand(id: string) {
-    stopTimedCommand(id)
-    timedCommands.value = timedCommands.value.filter((cmd) => cmd.id !== id)
-  }
-
-  function startTimedCommand(id: string) {
-    const command = timedCommands.value.find((cmd) => cmd.id === id)
-    if (!command) return
-
-    const quickCommand = quickCommands.value.find(
-      (cmd) => cmd.id === command.quickCommandId
-    )
-    if (!quickCommand) return
-
-    command.isActive = true
-
-    const executeCommand = () => {
-      let dataToSend = quickCommand.command
-      if (quickCommand.addNewline && quickCommand.format === 'ASCII') {
-        dataToSend += '\n'
-      }
-      sendData(dataToSend, quickCommand.format)
-    }
-
-    if (command.isLoop) {
-      const timerId = setInterval(executeCommand, command.interval)
-      timerIds.set(command.id, timerId)
-    } else {
-      const timerId = setTimeout(() => {
-        executeCommand()
-        stopTimedCommand(command.id)
-      }, command.interval)
-      timerIds.set(command.id, timerId)
-    }
-  }
-
-  function stopTimedCommand(id: string) {
-    const command = timedCommands.value.find((cmd) => cmd.id === id)
-    if (!command) return
-
-    const timerId = timerIds.get(command.id)
-    if (timerId) {
-      if (command.isLoop) {
-        clearInterval(timerId)
-      } else {
-        clearTimeout(timerId)
-      }
-      timerIds.delete(command.id)
-    }
-    command.isActive = false
-  }
-
-  function updateTimedCommand(command: TimedCommand) {
-    const index = timedCommands.value.findIndex((cmd) => cmd.id === command.id)
-    if (index !== -1) {
-      // If the command was active, stop it first
-      if (timedCommands.value[index].isActive) {
-        stopTimedCommand(command.id)
-      }
-      // Update the command
-      timedCommands.value[index] = command
-    }
-  }
-
   function addEventListener(event: string, callback: (e: SerialEvent) => void) {
     if (!eventListeners.value[event]) {
       eventListeners.value[event] = []
@@ -254,6 +141,7 @@ export const useSerialStore = defineStore('serial', () => {
     config,
     logConfig,
     quickCommands,
+    timedCommands,
     isConnected,
     onData,
     connect: handleConnect,
@@ -262,8 +150,8 @@ export const useSerialStore = defineStore('serial', () => {
     addQuickCommand,
     removeQuickCommand,
     updateQuickCommand,
+    sendQuickCommand,
     error,
-    timedCommands,
     addTimedCommand,
     removeTimedCommand,
     startTimedCommand,
@@ -273,6 +161,6 @@ export const useSerialStore = defineStore('serial', () => {
     startLogRecording,
     stopLogRecording,
     addEventListener,
-    removeEventListener
+    removeEventListener,
   }
 })
