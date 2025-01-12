@@ -45,7 +45,7 @@
                 v-if="isDeleteMode"
                 class="btn btn-sm btn-error btn-square"
                 @click="() => store.removeTimedCommand(cmd.id)"
-                :title="$t('timedCommands.delete')"
+                :title="$t('common.delete')"
               >
                 <Icon name="ph:trash" class="w-4 h-4" />
               </button>

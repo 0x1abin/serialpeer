@@ -40,7 +40,7 @@
     "deleteMode": "Delete Mode",
     "send": "Send",
     "quickCommand": "Quick Command",
-    "cancel": "Cancel",
+    "duplicateNameError": "A command with this name already exists. Please use a different name.",
     "form": {
       "name": "Name",
       "command": "Command",

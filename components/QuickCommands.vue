@@ -41,7 +41,7 @@
                 v-if="isDeleteMode"
                 class="btn btn-sm btn-error btn-square"
                 @click="() => store.removeQuickCommand(cmd.id)"
-                :title="$t('quickCommands.delete')"
+                :title="$t('common.delete')"
               >
                 <Icon name="ph:trash" class="w-4 h-4" />
               </button>
@@ -66,7 +66,10 @@
           <h3 class="font-bold text-lg">
             {{ isEditing ? $t('quickCommands.edit') : $t('quickCommands.add') }} {{ $t('quickCommands.quickCommand') }}
           </h3>
-          <QuickCommandForm v-model="commandForm" />
+          <QuickCommandForm 
+            v-model="commandForm" 
+            :error="nameError" 
+          />
           <div class="modal-action">
             <button class="btn" @click="showDialog = false">{{ $t('common.cancel') }}</button>
             <button class="btn btn-primary" @click="handleSubmit">
@@ -82,11 +85,14 @@
 <script setup lang="ts">
 import type { QuickCommand } from '~/composables/interface'
 import { useSerialStore } from '~/stores/serial'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const store = useSerialStore()
 const showDialog = ref(false)
 const isEditing = ref(false)
 const editingId = ref<string | null>(null)
+const nameError = ref('')
 const commandForm = ref<Omit<QuickCommand, 'id'>>({
   name: '',
   command: '',
@@ -98,6 +104,7 @@ const isDeleteMode = ref(false)
 function openAddDialog() {
   isEditing.value = false
   editingId.value = null
+  nameError.value = ''
   commandForm.value = {
     name: '',
     command: '',
@@ -110,6 +117,7 @@ function openAddDialog() {
 function openEditDialog(cmd: QuickCommand) {
   isEditing.value = true
   editingId.value = cmd.id
+  nameError.value = ''
   commandForm.value = {
     name: cmd.name,
     command: cmd.command,
@@ -120,6 +128,18 @@ function openEditDialog(cmd: QuickCommand) {
 }
 
 function handleSubmit() {
+  const isDuplicateName = store.quickCommands.some(cmd => {
+    if (isEditing.value && editingId.value === cmd.id) {
+      return false
+    }
+    return cmd.name === commandForm.value.name
+  })
+
+  if (isDuplicateName) {
+    nameError.value = t('quickCommands.duplicateNameError')
+    return
+  }
+
   if (isEditing.value && editingId.value) {
     store.updateQuickCommand({
       ...commandForm.value,

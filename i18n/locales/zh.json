@@ -40,7 +40,7 @@
     "deleteMode": "删除模式",
     "send": "发送",
     "quickCommand": "快捷命令",
-    "cancel": "取消",
+    "duplicateNameError": "已存在相同名称的命令，请使用其他名称。",
     "form": {
       "name": "名称",
       "command": "命令",

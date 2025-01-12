@@ -6,7 +6,11 @@
         v-model="command.name" 
         type="text" 
         class="input input-bordered" 
+        :class="{ 'input-error': error }"
       />
+      <label v-if="error" class="label">
+        <span class="label-text-alt text-error">{{ error }}</span>
+      </label>
     </div>
     
     <div class="form-control">
@@ -43,7 +47,8 @@
 import type { QuickCommand } from '~/composables/interface'
 
 const props = defineProps<{
-  modelValue: Omit<QuickCommand, 'id'>
+  modelValue: Omit<QuickCommand, 'id'>,
+  error?: string
 }>()
 
 const emit = defineEmits<{
