@@ -84,7 +84,7 @@ function formatDisplayName(timestamp: number): string {
  * Download log file as text
  */
 async function downloadLog(file: LogFile) {
-  const content = file.content.join('\n')
+  const content = file.content.join('\n').replace(/\[\d+(?:;\d+)*m/g, '') // remove color tags
   const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
   const timestamp = new Date(file.createdAt).toISOString().replace(/[:.]/g, '-')
   saveAs(blob, `SerialLog_${timestamp}.txt`)
