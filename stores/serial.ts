@@ -58,20 +58,6 @@ export const useSerialStore = defineStore('serial', () => {
     parity: 'none',
   })
 
-  const logConfig = ref<LogConfig>({
-    maxSize: 1000,
-    autoScroll: true,
-    showTimestamp: localStorage.getItem('serialLogShowTimestamp') === 'true',
-  })
-
-  // Watch logConfig changes and save to localStorage
-  watch(
-    () => logConfig.value.showTimestamp,
-    (newValue) => {
-      localStorage.setItem('serialLogShowTimestamp', newValue.toString())
-    }
-  )
-
   const error = ref<string | null>(null)
 
   /**
@@ -139,7 +125,6 @@ export const useSerialStore = defineStore('serial', () => {
 
   return {
     config,
-    logConfig,
     quickCommands,
     timedCommands,
     isConnected,
