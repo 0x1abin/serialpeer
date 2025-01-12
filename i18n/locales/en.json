@@ -50,9 +50,9 @@
   },
   "timedCommands": {
     "title": "Timed Commands",
-    "noCommands": "No commands",
-    "add": "Add Command",
-    "edit": "Edit Command",
+    "noCommands": "No timer",
+    "add": "Add Timer",
+    "edit": "Edit Timer",
     "deleteMode": "Delete Mode",
     "interval": "Interval (ms)",
     "loop": "Loop",

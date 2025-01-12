@@ -50,9 +50,9 @@
   },
   "timedCommands": {
     "title": "定时命令",
-    "noCommands": "暂无命令",
-    "add": "添加命令",
-    "edit": "编辑命令",
+    "noCommands": "暂无定时器",
+    "add": "添加定时器",
+    "edit": "编辑定时器",
     "deleteMode": "删除模式",
     "interval": "间隔 (毫秒)",
     "loop": "循环",
