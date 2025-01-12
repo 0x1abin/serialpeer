@@ -16,7 +16,7 @@
     <div class="form-control">
       <label class="label">{{ $t('quickCommands.form.command') }}</label>
       <input 
-        v-model="command.command" 
+        v-model="localCommand" 
         type="text" 
         class="input input-bordered" 
       />
@@ -54,6 +54,36 @@ const props = defineProps<{
 const emit = defineEmits<{
   'update:modelValue': [value: Omit<QuickCommand, 'id'>]
 }>()
+
+const localCommand = computed({
+  get: () => {
+    if (props.modelValue.format === 'HEX') {
+      return formatHexInput(props.modelValue.command)
+    }
+    return props.modelValue.command
+  },
+  set: (value) => {
+    const newCommand = {
+      ...props.modelValue,
+      command: props.modelValue.format === 'HEX' 
+        ? value.replace(/[^0-9A-Fa-f]/g, '')
+        : value
+    }
+    emit('update:modelValue', newCommand)
+  }
+})
+
+// 监听格式变化
+watch(() => props.modelValue.format, (newFormat) => {
+  const currentCommand = props.modelValue.command
+  if (newFormat === 'HEX') {
+    // 切换到 HEX 模式时格式化输入
+    emit('update:modelValue', {
+      ...props.modelValue,
+      command: currentCommand.replace(/[^0-9A-Fa-f]/g, '')
+    })
+  }
+})
 
 const command = computed({
   get: () => props.modelValue,

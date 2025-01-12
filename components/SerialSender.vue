@@ -31,7 +31,7 @@
         <button 
           class="btn btn-primary"
           :disabled="!store.isConnected || !message"
-          @click="sendMessage"
+          @click="store.sendData(message, format)"
         >
           {{ $t('serialSender.send') }}
         </button>
@@ -46,18 +46,34 @@ const message = ref('')
 const format = ref<'ASCII' | 'HEX'>('ASCII')
 const autoNewline = ref(false)
 
-async function sendMessage() {
-  if (!message.value) return
-  
-  try {
-    let dataToSend = message.value
-    if (autoNewline.value && format.value === 'ASCII') {
-      dataToSend += '\r\n'
-    }
-    await store.sendData(dataToSend, format.value)
-    message.value = ''
-  } catch (error) {
-    console.error('Failed to send message:', error)
+// Watch for format changes
+watch(format, (newFormat) => {
+  if (newFormat === 'HEX') {
+    // Format current input when switching to HEX mode
+    message.value = formatHexInput(message.value)
+  } else {
+    // Remove spaces when switching back to ASCII mode
+    message.value = message.value.replace(/\s/g, '')
   }
-}
-</script>`
+})
+
+// Watch for message input
+watch(message, (newValue) => {
+  if (format.value === 'HEX') {
+    // Automatically format HEX input
+    const cursorPosition = (document.activeElement as HTMLTextAreaElement)?.selectionStart || 0
+    const formattedValue = formatHexInput(newValue)
+    if (formattedValue !== newValue) {
+      message.value = formattedValue
+      // Restore cursor position
+      nextTick(() => {
+        const textarea = document.querySelector('textarea')
+        if (textarea) {
+          const newPosition = Math.min(cursorPosition, formattedValue.length)
+          textarea.setSelectionRange(newPosition, newPosition)
+        }
+      })
+    }
+  }
+})
+</script>

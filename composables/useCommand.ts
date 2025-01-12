@@ -50,11 +50,23 @@ export function useCommand() {
   }
 
   function sendQuickCommand(cmd: QuickCommand) {
-    let dataToSend = cmd.command
-    if (cmd.addNewline && cmd.format === 'ASCII') {
-      dataToSend += '\r\n'
+    try {
+      let dataToSend = cmd.command
+      
+      if (cmd.format === 'HEX') {
+        dataToSend = validateAndFormatHex(dataToSend)
+        console.log('HEX dataToSend', dataToSend)
+      }
+      
+      if (cmd.addNewline && cmd.format === 'ASCII') {
+        dataToSend += '\r\n'
+      }
+      
+      return store.sendData(dataToSend, cmd.format)
+    } catch (error) {
+      console.error('Failed to send quick command:', error)
+      throw error
     }
-    store.sendData(dataToSend, cmd.format)
   }
 
   function getQuickCommandById(id: string) {

@@ -90,7 +90,7 @@ export function useSerialData() {
         const bytes = new TextEncoder().encode(data)
         return await writer.value.write(bytes)
       } else if (format === 'HEX' && typeof data === 'string') {
-        const bytes = new Uint8Array(data.split(' ').map(x => parseInt(x, 16)))
+        const bytes = hexToUint8Array(data)
         return await writer.value.write(bytes)
       }
     } catch (error) {
