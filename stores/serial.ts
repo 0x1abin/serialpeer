@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import { useSerialPort } from '~/composables/useSerialPort'
 import type { SerialConfig } from '~/composables/useSerialPort'
 import type { QuickCommand, TimedCommand } from '~/composables/interface'
+import { useSerialData } from '~/composables/useSerialData'
+import { useLogRecord } from '~/composables/useLogRecord'
 
 export interface LogConfig {
   maxSize: number;
@@ -22,11 +24,14 @@ export const useSerialStore = defineStore('serial', () => {
     startReading,
     stopReading,
     sendData,
+    onData,
+  } = useSerialData()
+
+  const {
     isLogRecording,
     startLogRecording,
     stopLogRecording,
-    onData,
-  } = useSerialData()
+  } = useLogRecord()
 
   // Reactive state
   const config = ref<SerialConfig>({
