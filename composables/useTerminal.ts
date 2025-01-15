@@ -26,8 +26,9 @@ const defaultConfig: TerminalConfig = {
     white: '#FFFFFF',
   },
   cursorBlink: true,
-  scrollback: 5000,
-  convertEol: true
+  scrollback: 100000,
+  convertEol: true,
+  fastScrollSensitivity: 10,
 }
 
 export function useTerminal(config: Partial<TerminalConfig> = {}) {

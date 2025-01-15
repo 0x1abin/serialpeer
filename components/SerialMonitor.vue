@@ -96,7 +96,7 @@ function exportLogs() {
   for (let i = 0; i < lineCount; i++) {
     const line = buffer.getLine(i)
     if (line) {
-      lines.push(line.translateToString())
+      lines.push(line.translateToString().trim())
     }
   }
   
