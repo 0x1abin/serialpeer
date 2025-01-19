@@ -14,20 +14,27 @@
     "generate-icons": "node scripts/generate-pwa-icons.js"
   },
   "dependencies": {
+    "@msgpack/msgpack": "^3.0.0-beta2",
     "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/i18n": "^9.1.1",
     "@nuxtjs/tailwindcss": "^6.12.2",
     "@pinia/nuxt": "^0.9.0",
+    "@vueuse/core": "^12.4.0",
     "@xterm/addon-fit": "^0.10.0",
     "@xterm/addon-web-links": "^0.11.0",
     "@xterm/xterm": "^5.5.0",
     "daisyui": "^4.12.23",
+    "eventemitter3": "^5.0.1",
     "file-saver": "^2.0.5",
     "idb": "^8.0.1",
+    "mqtt": "^5.10.3",
+    "nanoid": "^5.0.9",
     "nuxt": "^3.15.1",
     "nuxt-icon": "^0.6.10",
     "pinia": "^2.3.0",
-    "theme-change": "^2.5.0"
+    "qrcode.vue": "^3.6.0",
+    "theme-change": "^2.5.0",
+    "webrtc-adapter": "^9.0.1"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.7",

@@ -1,3 +1,15 @@
+import { customAlphabet } from "nanoid";
+
+const nanoid = customAlphabet("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz");
+
+export function randomPeerId(): string {
+    return nanoid(12);
+}
+
+export function generateKey(): string {
+    return nanoid(16);
+}
+
 export function hexToUint8Array(hexString: string): Uint8Array {
   const hex = hexString.replace(/\s/g, '')
   return new Uint8Array(
